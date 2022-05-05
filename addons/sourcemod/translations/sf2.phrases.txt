@@ -1561,6 +1561,11 @@
 		"chi"	"因为玩家已在你的组，所以你不可以使用此命令！"
 		"ko"	"플레이어가 이미 그룹에 있으므로 이 명령어는 수행할 수 없습니다."
 	}
+	
+	"SF2 Player In Game"
+	{
+		"en"	"You cannot perform this command because the player is currently playing on RED."
+	}
 
 	"SF2 Create Group Menu Title"
 	{
