@@ -73,6 +73,11 @@
 		"ko"	"대재앙"
 	}
 
+	"SF2 Random Difficulty"
+	{
+		"en"	"Random"
+	}
+
 	"SF2 Default Intro Message Singular"
 	{
 		"#format"		"{1:d}"
