@@ -1235,6 +1235,12 @@
 		"ko"	"{red}{1}{default}을(를) 게임에 강제 퇴장했습니다."
 	}
 
+	"SF2 Set Queue Points"
+	{
+		"#format"	"{1:s}"
+		"en"	"Changed {blue}{1}{default} queue points."
+	}
+
 	"SF2 Cannot Use Command"
 	{
 		"en"	"This command cannot be used at this time."

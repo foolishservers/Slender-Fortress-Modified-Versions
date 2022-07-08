@@ -35,8 +35,8 @@ bool steamworks;
 #include <sf2>
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.7.4.2 M"
-#define PLUGIN_VERSION_DISPLAY "1.7.4.2 M"
+#define PLUGIN_VERSION "1.7.4.3 M"
+#define PLUGIN_VERSION_DISPLAY "1.7.4.3 M"
 
 #define TFTeam_Spectator 1
 #define TFTeam_Red 2
@@ -5262,7 +5262,6 @@ void ForceInNextPlayersInQueue(int amount, bool showMessage = false)
 			Action action;
 			Call_StartForward(g_OnClientEnterGameFwd);
 			Call_PushCell(client);
-			Call_PushCell(-1);
 			Call_Finish(action);
 			if (action >= Plugin_Handled)
 			{
