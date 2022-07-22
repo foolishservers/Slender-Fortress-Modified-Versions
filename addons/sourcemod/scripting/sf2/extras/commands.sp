@@ -611,10 +611,6 @@ static Action Command_BlinkOff(int client, int iArgs)
 
 static Action DevCommand_BossPackVote(int client,int args)
 {
-	if (!g_Enabled)
-	{
-		return Plugin_Continue;
-	}
 	InitiateBossPackVote(client);
 	return Plugin_Handled;
 }

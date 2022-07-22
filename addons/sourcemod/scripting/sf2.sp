@@ -1133,14 +1133,31 @@ public void OnConfigsExecuted()
 			char map[256];
 			GetCurrentMap(map, sizeof(map));
 
-			if (!StrContains(map, "slender_", false) || !StrContains(map, "sf2_", false))
-			{
-				StartPlugin();
-			}
-			else
+			StartPlugin();
+
+			if (!(!StrContains(map, "slender_", false) || !StrContains(map, "sf2_", false)))
 			{
 				LogMessage("%s is not a Slender Fortress map. Plugin disabled!", map);
-				StopPlugin();
+				
+				g_Enabled = false;
+				
+				ConVar cvar = FindConVar("mp_friendlyfire");
+				if (cvar != null)
+				{
+					cvar.SetBool(false);
+				}
+		
+				cvar = FindConVar("mp_flashlight");
+				if (cvar != null)
+				{
+					cvar.SetBool(false);
+				}
+
+				cvar = FindConVar("mat_supportflashlight");
+				if (cvar != null)
+				{
+					cvar.SetBool(false);
+				}
 			}
 		}
 		else
