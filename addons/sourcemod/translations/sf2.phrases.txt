@@ -134,6 +134,11 @@
 		"ko"	"유예 기간이 끝났습니다. 이제 죽으면 탈락입니다."
 	}
 
+	"SF2 Grace Period Page"
+	{
+		"en"	"Wait for Grace period to end to collect a page."
+	}
+
 	"SF2 Player Escaped"
 	{
 		"#format"		"{1:s}"
