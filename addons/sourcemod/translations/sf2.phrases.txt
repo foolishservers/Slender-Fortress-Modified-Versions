@@ -137,6 +137,7 @@
 	"SF2 Grace Period Page"
 	{
 		"en"	"Wait for Grace period to end to collect a page."
+		"ko"	"단서를 수집하기 위해선 유예 기간이 끝날 때까지 기다리세요."
 	}
 
 	"SF2 Player Escaped"
@@ -290,7 +291,7 @@
 		"ru"	"Slender Fortress 2 (SF2) это игровой режим основанный\nна игре \"Slender: The Eight Pages\" за авторством\nMark J. Hadley. Цель - найти и собрать все предметы\nна карте и не попасться преследователю.\nСобирайте предметы, ударяя их."
 		"fi"	"Slender Fortress 2 (SF2) on pelimuoto joka perustuu\n peliin \"Slender: The Eight Pages\" tehnyt Mark\nJ. Hadley. Tehtäväsi on kerätä kaikki tavarat\nkartalta ja paeta jäämättäsi kiinni\nviholliselle. Keräät lappuja lyömällä\nniitä lähitaistelu aseellasi."
 		"chi"	"暗鬼要塞2(SF2)是一个基于游戏\n \"瘦长鬼影：八页纸\" 作者Mark J.Hadley。\n游戏目标是收集地图内所有物品而不被敌人抓住\n使用近战物品攻击物品来收集。"
-		"ko"	"슬렌더 포트트리스 2 (SF2)는\nMark J. Hadley 가 만든 게임인\n\"Slender: The Eight Pages\"\n을 베이스로한 게임모드 입니다.\n적을 피해 단서를 모두 모으고 시설을 탈출 하세요.\n근접 공격을 통해 단서를 모을 수 있습니다."
+		"ko"	"슬렌더 포트리스 2 (SF2)는\nMark J. Hadley 가 만든 게임인\n\"Slender: The Eight Pages\"\n을 베이스로한 게임모드 입니다.\n적을 피해 단서를 모두 모으고 시설을 탈출 하세요.\n근접 공격을 통해 단서를 모을 수 있습니다."
 	}
 
 	"SF2 Help Objective Description 2"
@@ -299,7 +300,7 @@
 		"ru"	"Только определённое количество игроков будет\nвыбрано для игры за КРАСНЫХ. Остальным игрокам\nнеобходимо ждать своей очереди в команде СИНИХ.\nСиние могут наблюдать за красными,\nиспользуя команду !slghost."
 		"fi"	"Vain osa pelaajista valitaan RED:lle\npelaamaan peliä. Muut pelaajat joutuvat odottamaan\nvuoroaan BLU:lla kunnes on heidän vuoronsa.\nBLU pystyy katsomaan RED:iä reaaliaikaisesti\nkäyttäen komentoa !slghost."
 		"chi"	"只有一部分的蓝队玩家会被选入游戏\n剩下的玩家必须在蓝队等待直到轮到自己\n蓝队可以使用!slghost来实时观察红队\n而不用进入观察者队伍。"
-		"ko"	"블루팀 플레이어 중에서 일정 인원수만 선택되어 플레이하게 됩니다.\n나머지 플레이어는 대기실에서 다음 차례가 올 때까지 기다려야 합니다.\n블루팀은 관전자 팀에 들어갈 필요 없이\n!slghost 명령어를 통해 유령이 되어\n실시간으로 레드팀 상황을 볼 수 있습니다."
+		"ko"	"블루팀 플레이어 중에서 일정 인원 수만 선택되어 플레이하게 됩니다.\n나머지 플레이어는 대기실에서 다음 차례가 올 때까지 기다려야 합니다.\n블루팀은 관전자 팀에 들어갈 필요 없이\n!slghost 명령어를 통해 유령이 되어\n실시간으로 레드팀 상황을 볼 수 있습니다."
 	}
 
 	"SF2 Help Commands Menu Title"
@@ -403,11 +404,11 @@
 
 	"SF2 Help Scout Class Info Description"
 	{
-		"en"	"[+] 15%% increase in sprint duration\n[-] Low health, most affected by screen wobbling"
+		"en"	"[+] Fast sprint speed than other class\n[-] Low health, most affected by screen wobbling"
 		"ru"	"[+] На 15%% увеличена продолжительность бега\n[-] Мало здоровья, наиболее подвержен внушению"
 		"fi"	"[+] 15%% lisäys juoksun kestoon\n[-] Heikko terveys, ottaa eniten vaikustusta näytön keikkumisesta"
 		"chi"	"[+] 增加 15%% 冲刺持续时间\n[-] 低生命值，更容易受到屏幕震动效果"
-		"ko"	"[+] 달리기 지속시간 15%% 증가\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
+		"ko"	"[+] 달리기 속도 빠름\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
 	}
 
 	"SF2 Help Soldier Class Info Menu Title"
@@ -421,11 +422,11 @@
 
 	"SF2 Help Soldier Class Info Description"
 	{
-		"en"	"[+] The Disciplinary Action increases both walking\nand sprinting speed\n[-] The Half-Zatoichi only restores 20 HP on kill\n[-] The Escape Plan only affects sprinting speed"
+		"en"	"[+] The Disciplinary Action increases both walking\nand sprinting speed\n[+] No sprint loss when jump without sprint\n[-] The Half-Zatoichi only restores 20 HP on kill"
 		"ru"	"[+] Дисциплинарное взыскание увеличивает скорость бега и ходьбы\n[-] Полудзатоити восстанавливает только 20 ед. за убийство\n[-] План эвакуации влияет только на скорость бега"
 		"fi"	"[+] Kuritoimenpide lisää kävelyn ja juoksemisen nopeutta\nPuolisokea Samurai antaa vain 20 terveyttä taposta\n[-] Pakosuunnitelma vaikuttaa vain ja ainostaan juoksu nopeuteen"
 		"chi"	"[+] 指挥官的军鞭同时增加走路和冲刺速度\n[-] 座头市之刀击杀后只恢复20HP\n[-] 逃生计划镐只影响冲刺速度"
-		"ko"	"[+] 징게조치를 통해 이동속도 증가 버프 부여 가능\n[-] 방맹인 검객을 통해서 얻는 회복량 20 으로 고정\n[-] 탈출 계획은 달리고 있는 상태일 때만 영향을 줍니다."
+		"ko"	"[+] 징계 조치를 통해 이동속도 증가 버프 부여 가능\n[+] 달리지 않을 때 점프는 달리기에 영향을 주지 않음\n[-] 반맹인 검객을 통해서 얻는 회복량 20으로 고정"
 	}
 
 	"SF2 Help Sniper Class Info Menu Title"
@@ -439,11 +440,11 @@
 
 	"SF2 Help Sniper Class Info Description"
 	{
-		"en"	"[+] Blink rate increased by 45%%\n[-] Low health, most affected by screen wobbling"
+		"en"	"[+] Blink rate increased by 100%%\n[-] Low health, most affected by screen wobbling"
 		"ru"	"[+] Моргает на 45%% реже\n[-] Мало здоровья, наиболее подвержен внушению"
 		"fi"	"[+] Räpäyttelya lisätty 40%%\n[-] Vähemmän terveyttä ja eniten vaikutusta näytön keikkumisesta"
 		"chi"	"[+] 眨眼频率增益 45%%\n[-] 低生命值，更容易受到屏幕震动效果"
-		"ko"	"[+] 눈 깜빡임 지속 시간 45%% 증가\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
+		"ko"	"[+] 눈 깜빡임 지속 시간 100%% 증가\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
 	}
 
 	"SF2 Help Demoman Class Info Menu Title"
@@ -461,7 +462,7 @@
 		"ru"	"[+] На 66%% увеличена продолжительность бега при испуге\n[-] Полудзатоити восстанавливает только 20 ед. за убийство"
 		"fi"	"[+] 66%% lisäys pelottamisen juoksunopeuteen\n[-] Puolisokea Samurai palauttaa vain 20 terveyttä taposta"
 		"chi"	"[+] 惊吓状态下增加 66%% 冲刺持续时间\n[-] 座头市之刀击杀后只恢复20HP"
-		"ko"	"[+] 보스가 가까이 있을 때, 달리기 지속 시간 66%% 증가\n[-] 방맹인 검객을 통해서 얻는 회복량 20 으로 고정"
+		"ko"	"[+] 보스가 가까이 있을 때, 달리기 지속 시간 66%% 증가\n[-] 반맹인 검객을 통해서 얻는 회복량 20으로 고정"
 	}
 
 	"SF2 Help Heavy Class Info Menu Title"
@@ -475,11 +476,11 @@
 
 	"SF2 Help Heavy Class Info Description"
 	{
-		"en"	"[+] Large health, least affected by screen wobbling\n[-] The Gloves of Running Urgently only affects sprinting speed"
+		"en"	"[+] Large health, least affected by screen wobbling\n[+] Immune to traps\n[-] The Gloves of Running Urgently only affects sprinting speed"
 		"ru"	"[+] Много здоровья, мало подвержен внушению\n[-] ГРУ влияют только на скорость бега"
 		"fi"	"[+] Suuri terveys, vähiten vaikutusta näytön keikkumisesta\n Pikajuoksuhanskat vaikuttaa vain juoksunopeuteen"
 		"chi"	"[+] 很多生命值，不容易受到屏幕震动效果\n[-] 紧急逃跑手套只影响冲刺速度"
-		"ko"	"[+] 높은 체력, 화면 흔들림에 영향을 덜 받음\n[-] G.R.U 는 달리고 있을 때만 영향을 줌"
+		"ko"	"[+] 높은 체력, 화면 흔들림에 영향을 덜 받음\n[+] 덫에 걸리지 않음\n[-] G.R.U 는 달리고 있을 때만 영향을 줌"
 	}
 
 	"SF2 Help Medic Class Info Menu Title"
@@ -493,11 +494,11 @@
 
 	"SF2 Help Medic Class Info Description"
 	{
-		"en"	"[+] Regenerates health over time\n[-] Prioritized target to bosses"
+		"en"	"[+] Regenerates health over time\n[-] Prioritized target to bosses\n[-] Can't play when thanatophobia"
 		"ru"	"[+] Со временем восстанавливает здоровье\n[-] Приоритетная цель"
 		"fi"	"[+] Terveys palautuu ajan myötä\n[-] Ensisijainen kohde bosseille"
 		"chi"	"[+] 随时间恢复生命值\n[-] Boss们的优先目标"
-		"ko"	"[+] 매초마다 체력이 회복됨\n[-] 보스에게 주 타겟이 됨"
+		"ko"	"[+] 매초마다 체력이 회복됨\n[-] 보스에게 주 타겟이 됨\n[-] Thanatophobia 스페셜 라운드 때 사용 불가"
 	}
 
 	"SF2 Help Pyro Class Info Menu Title"
@@ -515,7 +516,7 @@
 		"ru"	"[+] Огнеупорный, хех!\n[-] Разъединитель восстанавливает только 20 ед. за убийство, и\nполучаемый при ближнем бое урон увеличен на 33%%"
 		"fi"	"[+] Tulenkestävä, duh!\n[-] Tunkki palauttaa vain 20 terveyttä taposta\nlähitaistelu vahingon ottoa lisätty 33%%"
 		"chi"	"[+] 防火！哇！\n[-] 强力千斤顶击杀只恢复20HP，受到的近战伤害增加33%%"
-		"ko"	"[+] 화염 면역!\n[-] 전원 잭을 통해 얻을 수 있는 회복량이 20 으로 고정,\n33%% 근접 피해 취약"
+		"ko"	"[+] 화염 면역!\n[-] 전원 잭을 통해 얻을 수 있는 회복량이 20으로 고정,\n33%% 근접 피해 취약"
 	}
 
 	"SF2 Help Spy Class Info Menu Title"
@@ -547,11 +548,11 @@
 
 	"SF2 Help Engineer Class Info Description"
 	{
-		"en"	"[+] 75%% increase in Flashlight battery life\n[+] 60%% decrease in Flashlight recharge rate\n[-] Low health, most affected by screen wobbling"
+		"en"	"[+] 200%% increase in Flashlight battery life\n[+] 100%% increase in Flashlight radius\n[+] 20%% decrease in Flashlight recharge rate\n[+] 50%% increase in Flashlight stun damage\n[+] 150%% decrease in Flashlight sound radius\n[-] Low health, most affected by screen wobbling"
 		"ru"	"[+] Увеличение батареи фонарика на 75%%\n[+] На 60%% снижена скорость перезарядки фонарика\n[-] Низкое здоровье, наиболее подвержен внушению"
 		"fi"	"[+] 75%% lisäys taskulampun patterin elämään\n[-] Vähemmän terveyttä ja eniten vaikutusta näytön keikkumisesta"
 		"chi"	"[+] 增加 75%% 手电筒电池容量\n[+] 增益 60%% 手电筒充能速率\n[-] 低生命值，最容易受到屏幕震动效果"
-		"ko"	"[+] 손전등 베터리 용량 75%% 증가\n[+] 손전등 베터리 충전 속도 60%% 증가\n[-] 낮은 체력, 화면 흔들림에 영향을 더 받음"
+		"ko"	"[+] 손전등 배터리 용량 200%% 증가\n[+] 손전등 밝기 100%% 증가\n[+] 손전등 배터리 충전 속도 20%% 증가\n[+] 손전등 스턴 피해량 50%% 증가\n[+] 150%% 적은 손전등 소음\n[-] 낮은 체력, 화면 흔들림에 영향을 더 받음"
 	}
 
 	"SF2 Settings Menu Title"
@@ -704,7 +705,7 @@
 		"ru" 	"{lightblue}Температура фонарика установлена на {1}%."
 		"fi"	"{lightblue}Taskulampun lämpötila vaihdettu {1}%."
 		"chi"	"{lightblue}手电筒温度设为 {1}% 。"
-		"ko" 	"{lightblue}손전등 색감을 {1}% 으로 설정되었습니다."
+		"ko" 	"{lightblue}손전등 색감이 {1}% 으로 설정되었습니다."
 	}
 
 	"SF2 Ad Message 1"
@@ -748,7 +749,7 @@
 		"ru"	"{lightblue}Включено автоматическое возрождение на PvP арене."
 		"fi"	"{lightblue}Otettiin käyttöön automaattinen PvP areenalla syntyminen"
 		"chi"	"{lightblue}已开启PvP区域自动重生。"
-		"ko"	"{lightblue}Pvp 구역 자동 부활이 활성화 되었습니다."
+		"ko"	"{lightblue}PvP 구역 자동 부활이 활성화 되었습니다."
 	}
 
 	"SF2 PvP Spawn Decline"
@@ -757,21 +758,21 @@
 		"ru"	"{lightblue}Отключено автоматическое возрождение на PvP арене."
 		"fi"	"{lightblue}Poistettiin käytöstä automaattinen PvP areenalla syntyminen."
 		"chi"	"{lightblue}已关闭PvP区域自动重生。"
-		"ko"	"{lightblue}Pvp 구역 자동 부활이 비활성화 되었습니다."
+		"ko"	"{lightblue}PvP 구역 자동 부활이 비활성화 되었습니다."
 	}
 
 	"SF2 PvP Protection On"
 	{
 		"en"	"{lightblue}Enabled PvP Spawn Protection."
 		"fi"	"{lightblue}PvP Spawn Suojaus otettiin käyttöön."
-		"ko"	"{lightblue}Pvp 구역 부활 보호가 활성화 되었습니다."
+		"ko"	"{lightblue}PvP 구역 부활 보호가 활성화 되었습니다."
 	}
 
 	"SF2 PvP Protection Off"
 	{
 		"en"	"{lightblue}Disabled PvP Spawn Protection."
 		"fi"	"{lightblue}PvP Spawn Suojaus poistettu käytöstä."
-		"ko"	"{lightblue}Pvp 구역 부활 보호가 비활성화 되었습니다."
+		"ko"	"{lightblue}PvP 구역 부활 보호가 비활성화 되었습니다."
 	}
 
 	"SF2 Exiting PvP Arena"
@@ -913,7 +914,7 @@
 		"ru"	"{lightblue}Вы были перемещены к красным из-за нехватки игроков. Наслаждайтесь!"
 		"fi"	"{lightblue}Sinut on pakotettu peliin, koska RED:in pelaaja katkaisi yhteyden tai meni katsomoon. Pidä hauskaa!"
 		"chi"	"{lightblue}因为一名红队玩家断开连接或进入观察者，你被强制加入游戏。玩的开心！"
-		"ko"	"{lightblue}레드팀에 있는 플레이어가 서버와 연결이 끊겼거나 관전팀으로 합류로 인해 당신이 대신해서 들어갔습니다. 재밌게 하세요!"
+		"ko"	"{lightblue}레드팀에 있는 플레이어가 서버와 연결이 끊겼거나 관전팀으로 합류해 당신이 대신해서 들어갔습니다. 재밌게 하세요!"
 	}
 
 	"SF2 Special Round Announce Chat"
@@ -1134,7 +1135,7 @@
 		"ru"	"Нет активных боссов!"
 		"fi"	"Aktiivisia bosseja ei ole saatavilla!"
 		"chi"	"没有可用的活跃Boss！"
-		"ko"	"사용 가능한 활성하된 보스가 없습니다!"
+		"ko"	"사용 가능한 활성화된 보스가 없습니다!"
 	}
 
 	"SF2 Spawned Boss"
@@ -1161,7 +1162,7 @@
 		"ru"	"У этого босса не может быть помощников!"
 		"fi"	"Tuolle bossille ei ole sallittu avustajia!"
 		"chi"	"这个Boss不允许获得小弟！"
-		"ko"	"해당 보스는 프록시를 가질 수 업습니다!"
+		"ko"	"해당 보스는 프록시를 가질 수 없는 보스입니다!"
 	}
 
 	"SF2 Boss Should Teleport"
@@ -1226,7 +1227,7 @@
 		"ru"	"Игрок {blue}{1}{default} перемещён к Красным."
 		"fi"	"Pakotettiin {blue}{1}{default} peliin."
 		"chi"	"强制 {blue}{1}{default} 进入游戏。"
-		"ko"	"{blue}{1}{default}을(를) 게임에 강제 입장했습니다."
+		"ko"	"{blue}{1}{default}을(를) 게임에 강제 입장시켰습니다."
 	}
 
 	"SF2 Player Forced Out Of Game"
@@ -1237,7 +1238,7 @@
 		"fi"	"Pakotettiin {red}{1}{default} ulos pelistä."
 		"chi"	"强制 {red}{1}{default} 离开游戏。"
 		"ko"	"Forced {red}{1}{default} out of the game."
-		"ko"	"{red}{1}{default}을(를) 게임에 강제 퇴장했습니다."
+		"ko"	"{red}{1}{default}을(를) 게임에 강제 퇴장시켰습니다."
 	}
 
 	"SF2 Set Queue Points"
