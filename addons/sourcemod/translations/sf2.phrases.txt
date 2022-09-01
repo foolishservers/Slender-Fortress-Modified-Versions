@@ -1951,6 +1951,21 @@
 		"ko"	"{lightblue}이제 레드팀으로 플레이 도중 사망시 유령 모드가 활성화됩니다."
 	}
 
+	"SF2 Settings View Bobbing Toggle Title"
+	{
+		"en" 	"Set view bobbing toggle"
+	}
+
+	"SF2 Toggle View Bobbing On"
+	{
+		"en"	"{lightblue}View bobbing is now enabled."
+	}
+
+	"SF2 Toggle View Bobbing Off"
+	{
+		"en"	"{lightblue}View bobbing is now disabled."
+	}
+
 	"SF2 Recent Changes"
 	{
 		"en"	"Recent Changes:"
