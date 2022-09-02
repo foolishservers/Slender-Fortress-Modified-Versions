@@ -148,7 +148,7 @@
 		"ru"			"{dodgerblue}{1}{default} спасся!"
 		"fi"			"{dodgerblue}{1}{default} on paennut!"
 		"chi"			"{dodgerblue}{1}{default} 成功逃出了！"
-		"ko"			"{dodgerblue}{1}{default}가 탈출했습니다!"
+		"ko"			"{dodgerblue}{1}{default}(이)가 탈출했습니다!"
 	}
 
 	"SF2 Player Killed Champion"
@@ -158,7 +158,7 @@
 		"ru"			"{red}{1}{default} убил {valve}{2}!"
 		"fi"			"{red}{1}{default} on tappanut {valve}{2}!"
 		"chi"			"{red}{1}{default} 击杀了 {valve}{2}！"
-		"ko"			"{red}{1}{default} 가 {valve}{2}{default}를 쓰러뜨렸습니다!"
+		"ko"			"{red}{1}{default} (이)가 {valve}{2}{default}를 쓰러뜨렸습니다!"
 	}
 
 	"SF2 Camping System Warning"
@@ -168,7 +168,7 @@
 		"ru"			"ВНИМАНИЕ: Если в течение {1} сек. вы не начнёте двигаться, то вы будете схвачены!"
 		"fi"			"VAROITUS: Jos et liiku paikaltasi {1} sekunttiin, vihollinen nappaa sinut."
 		"chi"			"警告：如果你在 {1} 秒内不从当前位置移动的话，你会被Boss抓住。"
-		"ko"			"경고: {1} 초안에 해당 장소를 벗어나지 않으면, 보스에게 잡히게 됩니다."
+		"ko"			"경고: {1} 초 안에 해당 장소를 벗어나지 않으면, 보스에게 잡히게 됩니다."
 	}
 
 	"SF2 Main Menu Title"
@@ -409,7 +409,7 @@
 		"ru"	"[+] На 15%% увеличена продолжительность бега\n[-] Мало здоровья, наиболее подвержен внушению"
 		"fi"	"[+] 15%% lisäys juoksun kestoon\n[-] Heikko terveys, ottaa eniten vaikustusta näytön keikkumisesta"
 		"chi"	"[+] 增加 15%% 冲刺持续时间\n[-] 低生命值，更容易受到屏幕震动效果"
-		"ko"	"[+] 달리기 속도 빠름\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
+		"ko"	"[+] 달리기 속도 빠름\n[-] 낮은 체력, 스태틱에 더 영향을 받음"
 	}
 
 	"SF2 Help Soldier Class Info Menu Title"
@@ -445,7 +445,7 @@
 		"ru"	"[+] Моргает на 45%% реже\n[-] Мало здоровья, наиболее подвержен внушению"
 		"fi"	"[+] Räpäyttelya lisätty 40%%\n[-] Vähemmän terveyttä ja eniten vaikutusta näytön keikkumisesta"
 		"chi"	"[+] 眨眼频率增益 45%%\n[-] 低生命值，更容易受到屏幕震动效果"
-		"ko"	"[+] 눈 깜빡임 지속 시간 100%% 증가\n[-] 낮은 체력, 화면 흔들림에 더 영향을 받음"
+		"ko"	"[+] 눈 깜빡임 지속 시간 100%% 증가\n[-] 낮은 체력, 스태틱에 더 영향을 받음"
 	}
 
 	"SF2 Help Demoman Class Info Menu Title"
@@ -481,7 +481,7 @@
 		"ru"	"[+] Много здоровья, мало подвержен внушению\n[-] ГРУ влияют только на скорость бега"
 		"fi"	"[+] Suuri terveys, vähiten vaikutusta näytön keikkumisesta\n Pikajuoksuhanskat vaikuttaa vain juoksunopeuteen"
 		"chi"	"[+] 很多生命值，不容易受到屏幕震动效果\n[-] 紧急逃跑手套只影响冲刺速度"
-		"ko"	"[+] 높은 체력, 화면 흔들림에 영향을 덜 받음\n[+] 덫에 걸리지 않음\n[-] G.R.U 는 달리고 있을 때만 영향을 줌"
+		"ko"	"[+] 높은 체력, 스태틱에 영향을 덜 받음\n[+] 덫에 걸리지 않음\n[-] G.R.U 는 달리고 있을 때만 영향을 줌"
 	}
 
 	"SF2 Help Medic Class Info Menu Title"
@@ -535,7 +535,7 @@
 		"ru"	"[+] Все издаваемые звуки на 35%% тише\n[-] Мало здоровья, наиболее подвержен внушению"
 		"fi"	"[+] Kaikki äänet jota teet ovat 35%% hiljaisempia bosseille\n[-] Vähemmän terveyttä ja eniten vaikutusta näytön keikkumisesta"
 		"chi"	"[+] 你发出的声音对Boss来说有 35%% 安静加成\n[-] 低生命值，最容易受到屏幕震动效果"
-		"ko"	"[+] 당신이 만든 소음이 보스에게 35%% 더 조용히 들림\n[-] 낮은 체력, 화면 흔들림에 영향을 더 받음"
+		"ko"	"[+] 당신이 만든 소음이 보스에게 35%% 더 조용히 들림\n[-] 낮은 체력, 스태틱에 영향을 더 받음"
 	}
 
 	"SF2 Help Engineer Class Info Menu Title"
@@ -553,7 +553,7 @@
 		"ru"	"[+] Увеличение батареи фонарика на 75%%\n[+] На 60%% снижена скорость перезарядки фонарика\n[-] Низкое здоровье, наиболее подвержен внушению"
 		"fi"	"[+] 75%% lisäys taskulampun patterin elämään\n[-] Vähemmän terveyttä ja eniten vaikutusta näytön keikkumisesta"
 		"chi"	"[+] 增加 75%% 手电筒电池容量\n[+] 增益 60%% 手电筒充能速率\n[-] 低生命值，最容易受到屏幕震动效果"
-		"ko"	"[+] 손전등 배터리 용량 200%% 증가\n[+] 손전등 밝기 100%% 증가\n[+] 손전등 배터리 충전 속도 20%% 증가\n[+] 손전등 스턴 피해량 50%% 증가\n[+] 150%% 적은 손전등 소음\n[-] 낮은 체력, 화면 흔들림에 영향을 더 받음"
+		"ko"	"[+] 손전등 배터리 용량 200%% 증가\n[+] 손전등 밝기 100%% 증가\n[+] 손전등 배터리 충전 속도 20%% 증가\n[+] 손전등 스턴 피해량 50%% 증가\n[+] 150%% 적은 손전등 소음\n[-] 낮은 체력, 스태틱에 영향을 더 받음"
 	}
 
 	"SF2 Settings Menu Title"
@@ -1246,6 +1246,7 @@
 	{
 		"#format"	"{1:s}"
 		"en"	"Changed {blue}{1}{default} queue points."
+		"ko"	"{blue}{1}{default}의 대기열 포인트를 변경했습니다."
 	}
 
 	"SF2 Cannot Use Command"
@@ -1583,6 +1584,7 @@
 	"SF2 Player In Game"
 	{
 		"en"	"You cannot perform this command because the player is currently playing on RED."
+		"ko"	"플레이어가 이미 레드 팀에 있으므로 이 명령어는 수행할 수 없습니다."
 	}
 
 	"SF2 Create Group Menu Title"
@@ -1948,22 +1950,25 @@
 	{
 		"en"	"{lightblue}Ghost mode will now be enabled upon dying in RED."
 		"fi"	"{lightblue}Haamu tila otetaan nyt käyttöön, kun kuolet RED:llä."
-		"ko"	"{lightblue}이제 레드팀으로 플레이 도중 사망시 유령 모드가 활성화됩니다."
+		"ko"	"{lightblue}이제 레드팀으로 플레이 도중 사망 시 유령 모드가 활성화됩니다."
 	}
 
 	"SF2 Settings View Bobbing Toggle Title"
 	{
 		"en" 	"Set view bobbing toggle"
+		"ko"	"시야 흔들림 설정"
 	}
 
 	"SF2 Toggle View Bobbing On"
 	{
 		"en"	"{lightblue}View bobbing is now enabled."
+		"ko"	"{lightblue}시야 흔들림이 활성화되었습니다."
 	}
 
 	"SF2 Toggle View Bobbing Off"
 	{
 		"en"	"{lightblue}View bobbing is now disabled."
+		"ko"	"{lightblue}시야 흔들림이 비활성화되었습니다."
 	}
 
 	"SF2 Recent Changes"
