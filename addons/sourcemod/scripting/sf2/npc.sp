@@ -2095,6 +2095,7 @@ bool SelectProfile(SF2NPC_BaseNPC Npc, const char[] profile,int additionalBossFl
 	GetProfileString(profile, "fire_explode_sound", g_SlenderFireballExplodeSound[Npc.Index], sizeof(g_SlenderFireballExplodeSound[]), FIREBALL_IMPACT);
 	GetProfileString(profile, "fire_iceball_slow_sound", g_SlenderIceballImpactSound[Npc.Index], sizeof(g_SlenderIceballImpactSound[]), ICEBALL_IMPACT);
 	GetProfileString(profile, "fire_iceball_trail", g_SlenderIceballTrail[Npc.Index], sizeof(g_SlenderIceballTrail[]), ICEBALL_TRAIL);
+	GetProfileString(profile, "grenade_model", g_SlenderGrenadeModel[Npc.Index], sizeof(g_SlenderGrenadeModel[]), GRENADE_MODEL);
 	GetProfileString(profile, "grenade_shoot_sound", g_SlenderGrenadeShootSound[Npc.Index], sizeof(g_SlenderGrenadeShootSound[]), GRENADE_SHOOT);
 	GetProfileString(profile, "arrow_shoot_sound", g_SlenderArrowShootSound[Npc.Index], sizeof(g_SlenderArrowShootSound[]), ARROW_SHOOT);
 	GetProfileString(profile, "mangler_shoot_sound", g_SlenderManglerShootSound[Npc.Index], sizeof(g_SlenderManglerShootSound[]), MANGLER_SHOOT);

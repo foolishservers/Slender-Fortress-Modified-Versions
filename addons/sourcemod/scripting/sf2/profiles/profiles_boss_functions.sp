@@ -2716,7 +2716,7 @@ public bool LoadBossProfile(KeyValues kv, const char[] profile, char[] loadFailR
 	char fireballExplode[PLATFORM_MAX_PATH], fireballShoot[PLATFORM_MAX_PATH], fireIceballSlow[PLATFORM_MAX_PATH], rocketExplode[PLATFORM_MAX_PATH], rocketShoot[PLATFORM_MAX_PATH];
 	char engineSound[PLATFORM_MAX_PATH], grenadeShoot[PLATFORM_MAX_PATH], sentryrocketShoot[PLATFORM_MAX_PATH], arrowShoot[PLATFORM_MAX_PATH], manglerShoot[PLATFORM_MAX_PATH], baseballShoot[PLATFORM_MAX_PATH];
 	char spawnParticleSound[PLATFORM_MAX_PATH], despawnParticleSound[PLATFORM_MAX_PATH];
-	char smiteSound[PLATFORM_MAX_PATH], rocketModel[PLATFORM_MAX_PATH], trapModel[PLATFORM_MAX_PATH], trapDeploySound[PLATFORM_MAX_PATH], trapMissSound[PLATFORM_MAX_PATH], trapHitSound[PLATFORM_MAX_PATH];
+	char smiteSound[PLATFORM_MAX_PATH], rocketModel[PLATFORM_MAX_PATH], grenadeModel[PLATFORM_MAX_PATH], trapModel[PLATFORM_MAX_PATH], trapDeploySound[PLATFORM_MAX_PATH], trapMissSound[PLATFORM_MAX_PATH], trapHitSound[PLATFORM_MAX_PATH];
 	kv.GetString("cloak_on_sound", cloakOn, sizeof(cloakOn), DEFAULT_CLOAKONSOUND);
 	kv.GetString("cloak_off_sound", cloakOff, sizeof(cloakOff), DEFAULT_CLOAKOFFSOUND);
 	kv.GetString("player_jarate_sound", jarateHit, sizeof(jarateHit), JARATE_HITPLAYER);
@@ -2738,6 +2738,7 @@ public bool LoadBossProfile(KeyValues kv, const char[] profile, char[] loadFailR
 	kv.GetString("tp_effect_despawn_sound", despawnParticleSound, sizeof(despawnParticleSound));
 	kv.GetString("player_smite_sound", smiteSound, sizeof(smiteSound));
 	kv.GetString("rocket_model", rocketModel, sizeof(rocketModel), ROCKET_MODEL);
+	kv.GetString("grenade_model", grenadeModel, sizeof(grenadeModel), GRENADE_MODEL);
 	kv.GetString("trap_model", trapModel, sizeof(trapModel), TRAP_MODEL);
 	kv.GetString("trap_deploy_sound", trapDeploySound, sizeof(trapDeploySound), TRAP_DEPLOY);
 	kv.GetString("trap_miss_sound", trapMissSound, sizeof(trapMissSound), TRAP_CLOSE);
@@ -2771,6 +2772,13 @@ public bool LoadBossProfile(KeyValues kv, const char[] profile, char[] loadFailR
 		if (!PrecacheModel(rocketModel, true))
 		{
 			LogSF2Message("Rocket model file %s failed to be loaded, likely does not exist. This will crash the server if not fixed.", rocketModel);
+		}
+	}
+	if (strcmp(grenadeModel, Grenade_MODEL, true) != 0)
+	{
+		if (!PrecacheModel(grenadeModel, true))
+		{
+			LogSF2Message("Grenade model file %s failed to be loaded, likely does not exist. This will crash the server if not fixed.", grenadeModel);
 		}
 	}
 	if (strcmp(trapModel, TRAP_MODEL, true) != 0)

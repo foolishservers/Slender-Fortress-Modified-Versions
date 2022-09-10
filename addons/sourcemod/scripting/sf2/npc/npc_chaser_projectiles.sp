@@ -379,6 +379,7 @@ public int NPCChaserProjectileShoot(int bossIndex, int slender, int target, cons
 						TeleportEntity(projectileEnt, NULL_VECTOR, NULL_VECTOR, velocity);
 						SetEntDataFloat(projectileEnt, g_FullDamageData, NPCChaserGetProjectileDamage(bossIndex, difficulty));
 						ProjectileSetFlags(projectileEnt, PROJ_GRENADE);
+						SetEntityModel(projectileEnt, g_SlenderGrenadeModel[bossIndex]);
 
 						if (NPCChaserUseShootGesture(bossIndex) && i == 0)
 						{

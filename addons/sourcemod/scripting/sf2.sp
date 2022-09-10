@@ -370,6 +370,7 @@ char g_SlenderRocketModel[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderRocketTrailParticle[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderRocketExplodeParticle[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderGrenadeShootSound[MAX_BOSSES][PLATFORM_MAX_PATH];
+char g_SlenderGrenadeModel[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderSentryRocketShootSound[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderArrowShootSound[MAX_BOSSES][PLATFORM_MAX_PATH];
 char g_SlenderManglerShootSound[MAX_BOSSES][PLATFORM_MAX_PATH];
