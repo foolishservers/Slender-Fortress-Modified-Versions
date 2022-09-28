@@ -1166,6 +1166,12 @@ public void OnConfigsExecuted()
 				{
 					cvar.SetBool(true);
 				}
+				
+				cvar = FindConVar("mp_autoteambalance");
+				if (cvar != null)
+				{
+					cvar.SetBool(true);
+				}
 			}
 		}
 		else
@@ -1549,6 +1555,12 @@ static void StopPlugin()
 	}
 	
 	cvar = FindConVar("mp_scrambleteams_auto");
+	if (cvar != null)
+	{
+		cvar.SetBool(true);
+	}
+	
+	cvar = FindConVar("mp_autoteambalance");
 	if (cvar != null)
 	{
 		cvar.SetBool(true);

@@ -2774,7 +2774,7 @@ public bool LoadBossProfile(KeyValues kv, const char[] profile, char[] loadFailR
 			LogSF2Message("Rocket model file %s failed to be loaded, likely does not exist. This will crash the server if not fixed.", rocketModel);
 		}
 	}
-	if (strcmp(grenadeModel, Grenade_MODEL, true) != 0)
+	if (strcmp(grenadeModel, GRENADE_MODEL, true) != 0)
 	{
 		if (!PrecacheModel(grenadeModel, true))
 		{
