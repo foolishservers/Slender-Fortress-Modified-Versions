@@ -1160,6 +1160,12 @@ public void OnConfigsExecuted()
 				{
 					cvar.SetBool(false);
 				}
+				
+				cvar = FindConVar("mp_scrambleteams_auto");
+				if (cvar != null)
+				{
+					cvar.SetBool(true);
+				}
 			}
 		}
 		else
@@ -1540,6 +1546,12 @@ static void StopPlugin()
 	if (cvar != null)
 	{
 		cvar.SetBool(false);
+	}
+	
+	cvar = FindConVar("mp_scrambleteams_auto");
+	if (cvar != null)
+	{
+		cvar.SetBool(true);
 	}
 
 	if (MusicActive())
