@@ -771,7 +771,6 @@ public int NPCChaserProjectileAttackShoot(int bossIndex, int slender, int target
 				if (projectileEnt != -1)
 				{
 					float velocity[3], bufferProj[3];
-					GetProfileAttackString(slenderProfile, "attack_grenade_model", grenadeModel, sizeof(grenadeModel), GRENADE_MODEL, attackIndex+1);
 
 					GetAngleVectors(shootAng, bufferProj, NULL_VECTOR, NULL_VECTOR);
 
