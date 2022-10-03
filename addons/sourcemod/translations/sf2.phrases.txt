@@ -1,4 +1,4 @@
-﻿"Phrases"
+"Phrases"
 {
 	"SF2 Difficulty Vote Menu Title"
 	{
@@ -72,7 +72,7 @@
 		"en"	"Calamity"
 		"ko"	"대재앙"
 	}
-
+	
 	"SF2 Random Difficulty"
 	{
 		"en"	"Random"
@@ -134,7 +134,7 @@
 		"chi"	"宽限期结束。死亡将会导致出局。"
 		"ko"	"유예 기간이 끝났습니다. 이제 죽으면 탈락입니다."
 	}
-
+	
 	"SF2 Grace Period Page"
 	{
 		"en"	"Wait for Grace period to end to collect a page."
@@ -1241,7 +1241,7 @@
 		"ko"	"Forced {red}{1}{default} out of the game."
 		"ko"	"{red}{1}{default}을(를) 게임에 강제 퇴장시켰습니다."
 	}
-
+	
 	"SF2 Set Queue Points"
 	{
 		"#format"	"{1:s}"
@@ -1952,7 +1952,7 @@
 		"fi"	"{lightblue}Haamu tila otetaan nyt käyttöön, kun kuolet RED:llä."
 		"ko"	"{lightblue}이제 레드팀으로 플레이 도중 사망 시 유령 모드가 활성화됩니다."
 	}
-
+	
 	"SF2 Settings View Bobbing Toggle Title"
 	{
 		"en" 	"Set view bobbing toggle"
@@ -1982,7 +1982,7 @@
 	
 	"SF2 Change Log"
 	{
-		"en"	"-Added a random companion system\n-Entity optimization\n-Re-added the special round Single Player\n-General fixes\n-Made the new statue base easier to deal with by default\n-Created a new boss hitbox"
+		"en"	"-Precached literally every boss key value\n-Removed certain backwards compatibility"
 	}
 
 	"SF2 Smite player"
