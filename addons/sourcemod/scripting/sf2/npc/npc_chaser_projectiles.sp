@@ -391,7 +391,6 @@ public int NPCChaserProjectileShoot(int bossIndex, int slender, int target, cons
 						TeleportEntity(projectileEnt, NULL_VECTOR, NULL_VECTOR, velocity);
 						SetEntDataFloat(projectileEnt, g_FullDamageData, NPCChaserGetProjectileDamage(bossIndex, difficulty));
 						ProjectileSetFlags(projectileEnt, PROJ_GRENADE);
-						SetEntityModel(projectileEnt, g_SlenderGrenadeModel[bossIndex]);
 
 						if (NPCChaserUseShootGesture(bossIndex) && i == 0)
 						{
@@ -772,7 +771,6 @@ public int NPCChaserProjectileAttackShoot(int bossIndex, int slender, int target
 				if (projectileEnt != -1)
 				{
 					float velocity[3], bufferProj[3];
-					char grenadeModel[PLATFORM_MAX_PATH];
 					GetProfileAttackString(slenderProfile, "attack_grenade_model", grenadeModel, sizeof(grenadeModel), GRENADE_MODEL, attackIndex+1);
 
 					GetAngleVectors(shootAng, bufferProj, NULL_VECTOR, NULL_VECTOR);
@@ -795,13 +793,7 @@ public int NPCChaserProjectileAttackShoot(int bossIndex, int slender, int target
 					SetEntDataFloat(projectileEnt, g_FullDamageData, NPCChaserGetAttackProjectileDamage(bossIndex, attackIndex, difficulty));
 					TeleportEntity(projectileEnt, NULL_VECTOR, NULL_VECTOR, velocity);
 					ProjectileSetFlags(projectileEnt, PROJ_GRENADE);
-					if (strcmp(grenadeModel, GRENADE_MODEL, true) != 0)
-					{
-						int model;
-						model = PrecacheModel(grenadeModel, true);
-						SetEntProp(projectileEnt, Prop_Send, "m_nModelIndexOverrides", model);
-					}
-
+					
 					//SDKHook(projectileEnt, SDKHook_StartTouch, Hook_ProjectileTouch);
 				}
 			}
