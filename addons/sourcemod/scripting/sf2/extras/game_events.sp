@@ -1810,7 +1810,7 @@ public Action Event_PlayerDeath(Event event, const char[] name, bool dB)
 		ClientUpdateListeningFlags(client);
 
 		// Half-Zatoichi nerf code.
-		int katanaHealthGain = 10;
+		int katanaHealthGain = 5;
 		if (katanaHealthGain >= 0)
 		{
 			int attacker = GetClientOfUserId(event.GetInt("attacker"));
