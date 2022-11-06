@@ -285,6 +285,21 @@ enum struct SF2ChaserBossProfileAttackData
 	}
 }
 
+enum struct SF2ChaserBossProfileSoundSenseData
+{
+	int AddCount[Difficulty_Max];
+	float Cooldown[Difficulty_Max];
+
+	void Init()
+	{
+		for (int difficulty = 0; difficulty < Difficulty_Max; difficulty++)
+		{
+			this.AddCount[difficulty] = this.AddCount[difficulty] = difficulty > 0 ? this.AddCount[difficulty - 1] : 2;
+			this.Cooldown[difficulty] = this.Cooldown[difficulty] = difficulty > 0 ? this.Cooldown[difficulty - 1] : 0.0;
+		}
+	}
+}
+
 enum struct SF2ChaserBossProfileData
 {
 	float WalkSpeed[Difficulty_Max];
@@ -302,8 +317,6 @@ enum struct SF2ChaserBossProfileData
 	float ChaseDurationAddVisibleMin;
 	float ChaseDurationAddVisibleMax;
 
-	float SoundPosDiscardTime;
-	float SoundPosDistanceTolerance;
 	float ChasePersistencyTimeInit;
 	float ChaseAttackPersistencyTimeInit;
 	float ChaseAttackPersistencyTimeAdd;
@@ -313,6 +326,16 @@ enum struct SF2ChaserBossProfileData
 	float ChasePersistencyAddVisibleMax;
 	float ChaseStunPersistencyTimeInit;
 	float ChaseStunPersistencyTimeAdd;
+
+	int SoundCountToAlert[Difficulty_Max];
+	float SoundPosDiscardTime[Difficulty_Max];
+	float SoundPosDistanceTolerance[Difficulty_Max];
+	SF2ChaserBossProfileSoundSenseData FootstepSenses;
+	SF2ChaserBossProfileSoundSenseData LoudFootstepSenses;
+	SF2ChaserBossProfileSoundSenseData QuietFootstepSenses;
+	SF2ChaserBossProfileSoundSenseData VoiceSenses;
+	SF2ChaserBossProfileSoundSenseData WeaponSenses;
+	SF2ChaserBossProfileSoundSenseData FlashlightSenses;
 
 	float WanderRangeMin[Difficulty_Max];
 	float WanderRangeMax[Difficulty_Max];
@@ -345,10 +368,10 @@ enum struct SF2ChaserBossProfileData
 	int AutoChaseCount[Difficulty_Max];
 	int AutoChaseAdd[Difficulty_Max];
 	int AutoChaseAddFootstep[Difficulty_Max];
+	int AutoChaseAddLoudFootstep[Difficulty_Max];
 	int AutoChaseAddVoice[Difficulty_Max];
 	int AutoChaseAddWeapon[Difficulty_Max];
 	bool AutoChaseSprinters;
-	int SoundCountToAlert;
 
 	bool ChasesEndlessly;
 
@@ -440,6 +463,7 @@ enum struct SF2ChaserBossProfileData
 	bool IgniteEffects;
 	int IgniteIndexes;
 	char IgniteIndexesString[88];
+	float IgniteDuration[Difficulty_Max];
 	float IgniteDelay[Difficulty_Max];
 
 	bool StunEffects;
@@ -568,7 +592,6 @@ enum struct SF2ChaserBossProfileData
 	SF2BossProfileSoundInfo ChaseVisibleMusics;
 	SF2BossProfileSoundInfo AlertMusics;
 	SF2BossProfileSoundInfo IdleMusics;
-	SF2BossProfileSoundInfo TwentyDollarsMusics;
 
 	void Init()
 	{
@@ -581,6 +604,10 @@ enum struct SF2ChaserBossProfileData
 			this.AlertGracetime[difficulty] = this.AlertGracetime[difficulty] = difficulty > 0 ? this.AlertGracetime[difficulty - 1] : 0.5;
 			this.ChaseDuration[difficulty] = this.ChaseDuration[difficulty] = difficulty > 0 ? this.ChaseDuration[difficulty - 1] : 10.0;
 
+			this.SoundCountToAlert[difficulty] = this.SoundCountToAlert[difficulty] = difficulty > 0 ? this.SoundCountToAlert[difficulty - 1] : 8;
+			this.SoundPosDiscardTime[difficulty] = this.SoundPosDiscardTime[difficulty] = difficulty > 0 ? this.SoundPosDiscardTime[difficulty - 1] : 2.0;
+			this.SoundPosDistanceTolerance[difficulty] = this.SoundPosDistanceTolerance[difficulty] = difficulty > 0 ? this.SoundPosDistanceTolerance[difficulty - 1] : 512.0;
+
 			this.WanderRangeMin[difficulty] = this.WanderRangeMin[difficulty] = difficulty > 0 ? this.WanderRangeMin[difficulty - 1] : 400.0;
 			this.WanderRangeMax[difficulty] = this.WanderRangeMax[difficulty] = difficulty > 0 ? this.WanderRangeMax[difficulty - 1] : 1024.0;
 			this.WanderTimeMin[difficulty] = this.WanderTimeMin[difficulty] = difficulty > 0 ? this.WanderTimeMin[difficulty - 1] : 3.0;
@@ -592,6 +619,7 @@ enum struct SF2ChaserBossProfileData
 			this.AutoChaseCount[difficulty] = this.AutoChaseCount[difficulty] = difficulty > 0 ? this.AutoChaseCount[difficulty - 1] : 30;
 			this.AutoChaseAdd[difficulty] = this.AutoChaseAdd[difficulty] = difficulty > 0 ? this.AutoChaseAdd[difficulty - 1] : 0;
 			this.AutoChaseAddFootstep[difficulty] = this.AutoChaseAddFootstep[difficulty] = difficulty > 0 ? this.AutoChaseAddFootstep[difficulty - 1] : 2;
+			this.AutoChaseAddLoudFootstep[difficulty] = this.AutoChaseAddFootstep[difficulty];
 			this.AutoChaseAddVoice[difficulty] = this.AutoChaseAddVoice[difficulty] = difficulty > 0 ? this.AutoChaseAddVoice[difficulty - 1] : 8;
 			this.AutoChaseAddWeapon[difficulty] = this.AutoChaseAddWeapon[difficulty] = difficulty > 0 ? this.AutoChaseAddWeapon[difficulty - 1] : 4;
 
@@ -622,6 +650,7 @@ enum struct SF2ChaserBossProfileData
 			this.GasDuration[difficulty] = this.GasDuration[difficulty] = difficulty > 0 ? this.GasDuration[difficulty - 1] : 0.0;
 			this.MarkDuration[difficulty] = this.MarkDuration[difficulty] = difficulty > 0 ? this.MarkDuration[difficulty - 1] : 0.0;
 			this.SilentMarkDuration[difficulty] = this.SilentMarkDuration[difficulty] = difficulty > 0 ? this.SilentMarkDuration[difficulty - 1] : 0.0;
+			this.IgniteDuration[difficulty] = this.IgniteDuration[difficulty] = difficulty > 0 ? this.IgniteDuration[difficulty - 1] : 10.0;
 			this.IgniteDelay[difficulty] = this.IgniteDelay[difficulty] = difficulty > 0 ? this.IgniteDelay[difficulty - 1] : 0.0;
 			this.StunEffectDuration[difficulty] = this.StunEffectDuration[difficulty] = difficulty > 0 ? this.StunEffectDuration[difficulty - 1] : 0.0;
 			this.StunEffectSlowdown[difficulty] = this.StunEffectSlowdown[difficulty] = difficulty > 0 ? this.StunEffectSlowdown[difficulty - 1] : 0.0;
@@ -657,8 +686,6 @@ enum struct SF2ChaserBossProfileData
 		this.ChaseDurationAddVisibleMin = 0.025;
 		this.ChaseDurationAddVisibleMax = 0.2;
 
-		this.SoundPosDiscardTime = 2.0;
-		this.SoundPosDistanceTolerance = 512.0;
 		this.ChasePersistencyTimeInit = 5.0;
 		this.ChaseAttackPersistencyTimeInit = -1.0;
 		this.ChaseAttackPersistencyTimeAdd = 2.0;
@@ -668,6 +695,24 @@ enum struct SF2ChaserBossProfileData
 		this.ChasePersistencyAddVisibleMax = 0.15;
 		this.ChaseStunPersistencyTimeInit = -1.0;
 		this.ChaseStunPersistencyTimeAdd = 2.0;
+
+		this.FootstepSenses.Init();
+		this.LoudFootstepSenses.Init();
+		this.QuietFootstepSenses.Init();
+		this.VoiceSenses.Init();
+		this.WeaponSenses.Init();
+		this.FlashlightSenses.Init();
+
+		for (int difficulty = 0; difficulty < Difficulty_Max; difficulty++)
+		{
+			this.FootstepSenses.AddCount[difficulty] = 1;
+			this.LoudFootstepSenses.AddCount[difficulty] = 2;
+			this.QuietFootstepSenses.AddCount[difficulty] = 1;
+
+			this.VoiceSenses.AddCount[difficulty] = 10;
+			this.WeaponSenses.AddCount[difficulty] = 5;
+			this.FlashlightSenses.AddCount[difficulty] = 5;
+		}
 
 		this.StunEnabled = false;
 		this.StunCooldown = 3.5;
@@ -693,7 +738,6 @@ enum struct SF2ChaserBossProfileData
 
 		this.AutoChaseEnabled = false;
 		this.AutoChaseSprinters = false;
-		this.SoundCountToAlert = 4;
 
 		this.ChasesEndlessly = false;
 
@@ -884,8 +928,6 @@ enum struct SF2ChaserBossProfileData
 		this.AlertMusics.Channel = MUSIC_CHAN;
 		this.IdleMusics.Init();
 		this.IdleMusics.Channel = MUSIC_CHAN;
-		this.TwentyDollarsMusics.Init();
-		this.TwentyDollarsMusics.Channel = MUSIC_CHAN;
 	}
 
 	void PostLoad()
@@ -908,7 +950,6 @@ enum struct SF2ChaserBossProfileData
 		this.ChaseVisibleMusics.PostLoad();
 		this.AlertMusics.PostLoad();
 		this.IdleMusics.PostLoad();
-		this.TwentyDollarsMusics.PostLoad();
 
 		if (this.ProjectilePosOffsets != null && this.ProjectilePosOffsets.Length <= 0)
 		{
@@ -1007,10 +1048,6 @@ enum struct SF2ChaserBossProfileData
 		{
 			this.IdleMusics.Load(kv);
 		}
-		else if (strcmp(sectionName, "sound_20dollars") == 0)
-		{
-			this.TwentyDollarsMusics.Load(kv);
-		}
 	}
 
 	void Destroy()
@@ -1033,7 +1070,6 @@ enum struct SF2ChaserBossProfileData
 		this.ChaseVisibleMusics.Destroy();
 		this.AlertMusics.Destroy();
 		this.IdleMusics.Destroy();
-		this.TwentyDollarsMusics.Destroy();
 		if (this.Attacks != null)
 		{
 			SF2ChaserBossProfileAttackData attackData;
@@ -1135,6 +1171,7 @@ enum struct SF2ChaserBossProfileData
 				soundInfo.Destroy();
 			}
 		}
+
 		if (this.DamageResistances != null)
 		{
 			delete this.DamageResistances;

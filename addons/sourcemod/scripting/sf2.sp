@@ -328,6 +328,7 @@ bool g_SlenderInvestigatingSound[MAX_BOSSES];
 int g_SlenderTargetSoundCount[MAX_BOSSES];
 int g_SlenderAutoChaseCount[MAX_BOSSES];
 float g_SlenderAutoChaseCooldown[MAX_BOSSES];
+float g_SlenderSoundPositionSetCooldown[MAX_BOSSES];
 int g_SlenderSoundTarget[MAX_BOSSES] = { INVALID_ENT_REFERENCE, ... };
 int g_SlenderSeeTarget[MAX_BOSSES] = { INVALID_ENT_REFERENCE, ... };
 bool g_SlenderIsAutoChasingLoudPlayer[MAX_BOSSES];
@@ -531,10 +532,11 @@ int g_PlayerProxyAskSpawnPoint[MAXPLAYERS + 1] = { -1, ... };
 int g_PlayerDesiredFOV[MAXPLAYERS + 1];
 
 Handle g_PlayerPostWeaponsTimer[MAXPLAYERS + 1] = { null, ... };
+float g_PlayerIgniteDurationEffect[MAXPLAYERS + 1] = { 10.0, ... };
 Handle g_PlayerIgniteTimer[MAXPLAYERS + 1] = { null, ... };
-Handle g_PlayerResetIgnite[MAXPLAYERS + 1] = { null, ... };
-Handle g_PlayerPageRewardTimer[MAXPLAYERS + 1] = { null, ... };
 Handle g_PlayerPageRewardCycleTimer[MAXPLAYERS + 1] = { null, ... };
+static float g_PlayerPageRewardCycleCooldown[MAXPLAYERS + 1] = { 0.0, ... };
+static int g_PlayerPageRewardCycleCount[MAXPLAYERS + 1] = { 0, ... };
 Handle g_PlayerFireworkTimer[MAXPLAYERS + 1] = { null, ... };
 
 bool g_PlayerGettingPageReward[MAXPLAYERS + 1] = { false, ... };
@@ -570,12 +572,6 @@ float g_PlayerIdleMusicVolumes[MAXPLAYERS + 1][MAX_BOSSES];
 Handle g_PlayerIdleMusicTimer[MAXPLAYERS + 1][MAX_BOSSES];
 int g_PlayerIdleMusicMaster[MAXPLAYERS + 1] = { -1, ... };
 int g_PlayerIdleMusicOldMaster[MAXPLAYERS + 1] = { -1, ... };
-
-char g_Player20DollarsMusicString[MAXPLAYERS + 1][MAX_BOSSES][PLATFORM_MAX_PATH];
-float g_Player20DollarsMusicVolumes[MAXPLAYERS + 1][MAX_BOSSES];
-Handle g_Player20DollarsMusicTimer[MAXPLAYERS + 1][MAX_BOSSES];
-int g_Player20DollarsMusicMaster[MAXPLAYERS + 1] = { -1, ... };
-int g_Player20DollarsMusicOldMaster[MAXPLAYERS + 1] = { -1, ... };
 
 char g_Player90sMusicString[MAXPLAYERS + 1][PLATFORM_MAX_PATH];
 float g_Player90sMusicVolumes[MAXPLAYERS + 1];
@@ -663,7 +659,6 @@ ConVar g_PlayerShakeFrequencyMaxConVar;
 ConVar g_PlayerShakeAmplitudeMaxConVar;
 ConVar g_GraceTimeConVar;
 ConVar g_AllChatConVar;
-ConVar g_20DollarsConVar;
 ConVar g_MaxPlayersConVar;
 ConVar g_MaxPlayersOverrideConVar;
 ConVar g_CampingEnabledConVar;
@@ -752,8 +747,6 @@ ConVar g_WeaponCriticalsConVar;
 ConVar g_PhysicsPushScaleConVar;
 ConVar g_DragonsFuryBurningBonus;
 ConVar g_DragonsFuryBurnDuration;
-
-bool g_20Dollars;
 
 bool g_IsPlayerShakeEnabled;
 bool g_PlayerViewbobHurtEnabled;
@@ -1077,8 +1070,6 @@ static void StartPlugin()
 
 	g_Gravity = g_GravityConVar.FloatValue;
 
-	g_20Dollars = g_20DollarsConVar.BoolValue;
-
 	g_IsPlayerShakeEnabled = g_PlayerShakeEnabledConVar.BoolValue;
 	g_PlayerViewbobHurtEnabled = g_PlayerViewbobHurtEnabledConVar.BoolValue;
 	g_PlayerViewbobSprintEnabled = g_PlayerViewbobSprintEnabledConVar.BoolValue;
@@ -1226,7 +1217,6 @@ static void PrecacheStuff()
 	PrecacheSound2(FLASHLIGHT_BREAKSOUND);
 	PrecacheSound2(FLASHLIGHT_NOSOUND);
 	PrecacheSound2(PAGE_GRABSOUND);
-	PrecacheSound2(TWENTYDOLLARS_MUSIC);
 
 	PrecacheSound(DEFAULT_CLOAKONSOUND);
 	PrecacheSound(DEFAULT_CLOAKOFFSOUND);
@@ -1309,7 +1299,6 @@ static void PrecacheStuff()
 	AddFileToDownloadsTable("models/slender/pickups/sheet.phy");
 	AddFileToDownloadsTable("models/slender/pickups/sheet.sw.vtx");
 	AddFileToDownloadsTable("models/slender/pickups/sheet.vvd");
-	AddFileToDownloadsTable("models/slender/pickups/sheet.xbox");
 
 	AddFileToDownloadsTable("models/demani_sf/key_australium.mdl");
 	AddFileToDownloadsTable("models/demani_sf/key_australium.dx80.vtx");
@@ -2304,10 +2293,6 @@ void OnConVarChanged(Handle cvar, const char[] oldValue, const char[] intValue)
 	{
 		g_Gravity = StringToFloat(intValue);
 	}
-	else if (cvar == g_20DollarsConVar)
-	{
-		g_20Dollars = view_as<bool>(StringToInt(intValue));
-	}
 	else if (cvar == g_AllChatConVar || SF_IsBoxingMap())
 	{
 		if (g_Enabled)
@@ -2474,53 +2459,7 @@ public void OnEntityCreated(int ent, const char[] classname)
 	{
 		RemoveEntity(ent);
 	}
-	else if (strcmp(classname, "obj_sentrygun") == 0 || strcmp(classname, "obj_dispenser") == 0 || strcmp(classname, "obj_teleporter") == 0)
-	{
-		CreateTimer(0.1, Timer_FullyBuildBuilding, EntIndexToEntRef(ent), TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
-	}
 	PvP_OnEntityCreated(ent, classname);
-}
-
-static Action Timer_FullyBuildBuilding(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int building = EntRefToEntIndex(entref);
-	if (!building || building == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	int builder = GetEntPropEnt(building, Prop_Send, "m_hBuilder");
-
-	if (GetEntPropFloat(building, Prop_Send, "m_flPercentageConstructed") >= 1.0 && !GetEntProp(building, Prop_Send, "m_bCarried") &&
-	IsValidClient(builder))
-	{
-		char buildingClass[64];
-
-		GetEntityClassname(building, buildingClass, sizeof(buildingClass));
-
-		SetEntProp(building, Prop_Send, "m_iTeamNum", TFTeam_Boss);
-		int randomLevel = GetRandomInt(1,1);
-		int health = 150;
-		if (strcmp(buildingClass, "obj_sentrygun") == 0)
-		{
-			SetEntityModel(building,"models/buildables/sentry1.mdl");
-		}
-		else if (strcmp(buildingClass, "obj_dispenser") == 0)
-		{
-			SetEntityModel(building,"models/buildables/dispenser.mdl");
-		}
-		SetEntProp(building, Prop_Send, "m_iUpgradeLevel", randomLevel);
-		SetEntProp(building, Prop_Send, "m_iHealth", health);
-		SetEntProp(building, Prop_Send, "m_iMaxHealth", health);
-		return Plugin_Stop;
-	}
-
-	return Plugin_Continue;
 }
 
 MRESReturn Hook_WeaponGetCustomDamageType(int weapon, DHookReturn returnHandle, DHookParam params)
@@ -2718,11 +2657,6 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 					return Plugin_Handled;
 				}
 			}
-			if (!StrContains(sample, "player/footsteps", false) || StrContains(sample, "step", false) != -1)
-			{
-				sample = NULLSOUND;
-				return Plugin_Changed;
-			}
 		}
 		else if (g_PlayerProxy[entity])
 		{
@@ -2777,6 +2711,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddVoice(bossIndex, difficulty);
 								g_SlenderAutoChaseCooldown[bossIndex] = GetGameTime() + 0.3;
 							}
+							g_SlenderTargetSoundType[bossIndex] = SoundType_Voice;
 						}
 					}
 				}
@@ -2800,6 +2735,29 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 							ClientViewPunch(entity, punchVelStep);
 						}
 
+						bool isLoudStep = false;
+
+						bool isCrouchStep = false;
+
+						if (IsClientSprinting(entity) && !(GetEntProp(entity, Prop_Send, "m_bDucking") || GetEntProp(entity, Prop_Send, "m_bDucked")))
+						{
+							isLoudStep = true;
+						}
+						else if (GetEntProp(entity, Prop_Send, "m_bDucking") || GetEntProp(entity, Prop_Send, "m_bDucked"))
+						{
+							isCrouchStep = true;
+						}
+
+						SoundType soundType = SoundType_Footstep;
+						if (isLoudStep)
+						{
+							soundType = SoundType_LoudFootstep;
+						}
+						else if (isCrouchStep)
+						{
+							soundType = SoundType_QuietFootstep;
+						}
+
 						for (int bossIndex = 0; bossIndex < MAX_BOSSES; bossIndex++)
 						{
 							if (NPCGetUniqueID(bossIndex) == -1)
@@ -2807,29 +2765,36 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								continue;
 							}
 
-							if (SlenderCanHearPlayer(bossIndex, entity, SoundType_Footstep) && NPCShouldHearEntity(bossIndex, entity, SoundType_Footstep))
+							if (SlenderCanHearPlayer(bossIndex, entity, soundType) && NPCShouldHearEntity(bossIndex, entity, soundType))
 							{
 								GetClientAbsOrigin(entity, g_SlenderTargetSoundTempPos[bossIndex]);
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDSUSPICIOUSSOUND;
-								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFOOTSTEP;
-								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
-								{
-									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
-									if (!IsClientReallySprinting(entity))
-									{
-										g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddFootstep(bossIndex, difficulty);
-									}
-									else if (IsClientReallySprinting(entity) && NPCChaserCanAutoChaseSprinters(bossIndex))
-									{
-										g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddFootstep(bossIndex, difficulty) * 3;
-									}
-									g_SlenderAutoChaseCooldown[bossIndex] = GetGameTime() + 0.3;
-								}
-
-								if (IsClientSprinting(entity) && !(GetEntProp(entity, Prop_Send, "m_bDucking") || GetEntProp(entity, Prop_Send, "m_bDucked")))
+								if (isLoudStep)
 								{
 									g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFOOTSTEPLOUD;
 								}
+								else if (isCrouchStep)
+								{
+									g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFOOTSTEPQUIET;
+								}
+								else
+								{
+									g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFOOTSTEP;
+								}
+								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+								{
+									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
+									if (isLoudStep)
+									{
+										g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddLoudFootstep(bossIndex, difficulty);
+									}
+									else
+									{
+										g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddFootstep(bossIndex, difficulty);
+									}
+									g_SlenderAutoChaseCooldown[bossIndex] = GetGameTime() + 0.3;
+								}
+								g_SlenderTargetSoundType[bossIndex] = soundType;
 							}
 						}
 					}
@@ -2856,6 +2821,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 									g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddWeapon(bossIndex, difficulty);
 									g_SlenderAutoChaseCooldown[bossIndex] = GetGameTime() + 0.3;
 								}
+								g_SlenderTargetSoundType[bossIndex] = SoundType_Weapon;
 							}
 						}
 					}
@@ -2882,6 +2848,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 									g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddWeapon(bossIndex, difficulty);
 									g_SlenderAutoChaseCooldown[bossIndex] = GetGameTime() + 0.3;
 								}
+								g_SlenderTargetSoundType[bossIndex] = SoundType_Flashlight;
 							}
 						}
 					}
@@ -3243,7 +3210,6 @@ void CollectPage(int page, int activator)
 
 	if (SF_SpecialRound(SPECIALROUND_PAGEREWARDS) && !g_PlayerGettingPageReward[activator])
 	{
-		g_PlayerPageRewardTimer[activator] = CreateTimer(3.0, Timer_GiveRandomPageReward, EntIndexToEntRef(activator), TIMER_FLAG_NO_MAPCHANGE);
 		g_PlayerGettingPageReward[activator] = true;
 		EmitRollSound(activator);
 	}
@@ -3385,271 +3351,64 @@ void CollectPage(int page, int activator)
 static void EmitRollSound(int client)
 {
 	EmitSoundToClient(client, GENERIC_ROLL_TICK, client);
-	CreateTimer(0.12, Timer_RollTick_Case2, EntIndexToEntRef(client), TIMER_FLAG_NO_MAPCHANGE);
+	g_PlayerPageRewardCycleCount[client] = 0;
+	g_PlayerPageRewardCycleCooldown[client] = 0.0;
+	g_PlayerPageRewardCycleTimer[client] = CreateTimer(0.1, Timer_RollTick, client, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-static Action Timer_RollTick_Case2(Handle timer, any entref)
+static Action Timer_RollTick(Handle timer, any client)
 {
 	if (!g_Enabled)
 	{
 		return Plugin_Stop;
 	}
 
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
+	if (!IsValidClient(client) || timer != g_PlayerPageRewardCycleTimer[client] || g_PlayerEliminated[client])
 	{
 		return Plugin_Stop;
 	}
 
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case3, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
+	if (g_PlayerPageRewardCycleCooldown[client] >= GetGameTime())
+	{
+		return Plugin_Continue;
+	}
 
-	return Plugin_Stop;
+	if (g_PlayerPageRewardCycleCount[client] <= 10)
+	{
+		g_PlayerPageRewardCycleCooldown[client] = 0.0;
+	}
+	else if (g_PlayerPageRewardCycleCount[client] > 10 && g_PlayerPageRewardCycleCount[client] < 14)
+	{
+		g_PlayerPageRewardCycleCooldown[client] = 0.2 + GetGameTime();
+	}
+	else if (g_PlayerPageRewardCycleCount[client] >= 14 && g_PlayerPageRewardCycleCount[client] < 15)
+	{
+		g_PlayerPageRewardCycleCooldown[client] = 0.4 + GetGameTime();
+	}
+	else if (g_PlayerPageRewardCycleCount[client] >= 16)
+	{
+		g_PlayerPageRewardCycleCount[client] = 0;
+		g_PlayerPageRewardCycleCooldown[client] = 0.0;
+		GiveRandomPageReward(client);
+		return Plugin_Stop;
+	}
+
+	EmitSoundToClient(client, GENERIC_ROLL_TICK);
+	EmitSoundToClient(client, GENERIC_ROLL_TICK);
+	g_PlayerPageRewardCycleCount[client]++;
+	return Plugin_Continue;
 }
 
-static Action Timer_RollTick_Case3(Handle timer, any entref)
+static void GiveRandomPageReward(int player)
 {
 	if (!g_Enabled)
 	{
-		return Plugin_Stop;
+		return;
 	}
 
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
+	if (!IsValidClient(player) || g_PlayerEliminated[player])
 	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case4, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case4(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case5, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case5(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case6, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case6(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case7, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case7(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case8, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case8(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case9, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case9(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.1, Timer_RollTick_Case10, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case10(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.3, Timer_RollTick_Case11, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case11(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.3, Timer_RollTick_Case12, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case12(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.3, Timer_RollTick_Case13, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case13(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-	g_PlayerPageRewardCycleTimer[player] = CreateTimer(0.5, Timer_RollTick_Case14, EntIndexToEntRef(player), TIMER_FLAG_NO_MAPCHANGE);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_RollTick_Case14(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	EmitSoundToClient(player, GENERIC_ROLL_TICK, player);
-
-	return Plugin_Stop;
-}
-
-static Action Timer_GiveRandomPageReward(Handle timer, any entref)
-{
-	if (!g_Enabled)
-	{
-		return Plugin_Stop;
-	}
-
-	int player = EntRefToEntIndex(entref);
-	if (!player || player == INVALID_ENT_REFERENCE)
-	{
-		return Plugin_Stop;
-	}
-
-	if (timer != g_PlayerPageRewardTimer[player])
-	{
-		return Plugin_Stop;
+		return;
 	}
 
 	g_PlayerGettingPageReward[player] = false;
@@ -3659,7 +3418,7 @@ static Action Timer_GiveRandomPageReward(Handle timer, any entref)
 	{
 		case 1:
 		{
-			TF2_IgnitePlayer(player, player);
+			TF2_IgnitePlayer(player, player, 5.0);
 		}
 		case 2:
 		{
@@ -3676,7 +3435,7 @@ static Action Timer_GiveRandomPageReward(Handle timer, any entref)
 		}
 		case 5:
 		{
-			TF2_MakeBleed(player, player, 8.0);
+			TF2_MakeBleed(player, player, 5.0);
 			EmitSoundToClient(player, BLEED_ROLL, player, SNDCHAN_AUTO, SNDLEVEL_SCREAMING);
 		}
 		case 6:
@@ -3686,7 +3445,7 @@ static Action Timer_GiveRandomPageReward(Handle timer, any entref)
 			{
 				case 6:
 				{
-					TF2_IgnitePlayer(player, player);
+					TF2_IgnitePlayer(player, player, 5.0);
 				}
 				case 7:
 				{
@@ -3703,7 +3462,7 @@ static Action Timer_GiveRandomPageReward(Handle timer, any entref)
 				}
 				case 14:
 				{
-					TF2_MakeBleed(player, player, 10.0);
+					TF2_MakeBleed(player, player, 5.0);
 					EmitSoundToClient(player, BLEED_ROLL, player, SNDCHAN_AUTO, SNDLEVEL_SCREAMING);
 				}
 				case 10, 11, 12, 13:
@@ -3788,10 +3547,6 @@ static Action Timer_GiveRandomPageReward(Handle timer, any entref)
 			EmitSoundToClient(player, NO_EFFECT_ROLL, player, SNDCHAN_AUTO, SNDLEVEL_SCREAMING);
 		}
 	}
-	g_PlayerPageRewardTimer[player] = null;
-	g_PlayerPageRewardCycleTimer[player] = null;
-
-	return Plugin_Stop;
 }
 
 //	==========================================================
@@ -4053,7 +3808,6 @@ public void OnClientPutInServer(int client)
 	ClientChaseMusicSeeReset(client);
 	ClientAlertMusicReset(client);
 	ClientIdleMusicReset(client);
-	Client20DollarsMusicReset(client);
 	Client90sMusicReset(client);
 	ClientMusicReset(client);
 	ClientResetProxy(client);

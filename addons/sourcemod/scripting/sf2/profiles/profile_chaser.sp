@@ -69,6 +69,12 @@ int GetChaserProfileAutoChaseAddFootstep(const char[] profile,int difficulty)
 	return g_CachedProfileData.AutoChaseAddFootstep[difficulty];
 }
 
+int GetChaserProfileAutoChaseAddLoudFootstep(const char[] profile,int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.AutoChaseAddLoudFootstep[difficulty];
+}
+
 int GetChaserProfileAutoChaseAddVoice(const char[] profile,int difficulty)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
@@ -123,16 +129,16 @@ float GetChaserProfileChaseDurationAddVisibleMax(const char[] profile)
 	return g_CachedProfileData.ChaseDurationAddVisibleMax;
 }
 
-float GetChaserProfileSoundPosDiscardTime(const char[] profile)
+float GetChaserProfileSoundPosDiscardTime(const char[] profile, int difficulty)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
-	return g_CachedProfileData.SoundPosDiscardTime;
+	return g_CachedProfileData.SoundPosDiscardTime[difficulty];
 }
 
-float GetChaserProfileSoundPosDistanceTolerance(const char[] profile)
+float GetChaserProfileSoundPosDistanceTolerance(const char[] profile, int difficulty)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
-	return g_CachedProfileData.SoundPosDistanceTolerance;
+	return g_CachedProfileData.SoundPosDistanceTolerance[difficulty];
 }
 
 float GetChaserProfileChasePersistencyTimeInit(const char[] profile)
@@ -193,6 +199,78 @@ float GetChaserProfileWanderRangeMin(const char[] profile,int difficulty)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
 	return g_CachedProfileData.WanderRangeMin[difficulty];
+}
+
+float GetChaserProfileHearFootstepCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.FootstepSenses.Cooldown[difficulty];
+}
+
+float GetChaserProfileHearLoudFootstepCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.LoudFootstepSenses.Cooldown[difficulty];
+}
+
+float GetChaserProfileHearQuietFootstepCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.QuietFootstepSenses.Cooldown[difficulty];
+}
+
+float GetChaserProfileHearVoiceCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.VoiceSenses.Cooldown[difficulty];
+}
+
+float GetChaserProfileHearWeaponCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.WeaponSenses.Cooldown[difficulty];
+}
+
+float GetChaserProfileHearFlashlightCooldown(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.FlashlightSenses.Cooldown[difficulty];
+}
+
+int GetChaserProfileFootstepAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.FootstepSenses.AddCount[difficulty];
+}
+
+int GetChaserProfileLoudFootstepAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.LoudFootstepSenses.AddCount[difficulty];
+}
+
+int GetChaserProfileQuietFootstepAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.QuietFootstepSenses.AddCount[difficulty];
+}
+
+int GetChaserProfileVoiceAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.VoiceSenses.AddCount[difficulty];
+}
+
+int GetChaserProfileWeaponAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.WeaponSenses.AddCount[difficulty];
+}
+
+int GetChaserProfileFlashlightAddThreshold(const char[] profile, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.FlashlightSenses.AddCount[difficulty];
 }
 
 float GetChaserProfileWanderRangeMax(const char[] profile,int difficulty)
@@ -307,6 +385,12 @@ float GetChaserProfileSilentMarkPlayerDuration(const char[] profile,int difficul
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
 	return g_CachedProfileData.SilentMarkDuration[difficulty];
+}
+
+float GetChaserProfileIgnitePlayerDuration(const char[] profile,int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.IgniteDuration[difficulty];
 }
 
 float GetChaserProfileIgnitePlayerDelay(const char[] profile,int difficulty)
@@ -1651,10 +1735,10 @@ bool GetChaserProfileEarthquakeFootstepAirShake(const char[] profile)
 	return g_CachedProfileData.EarthquakeFootstepAirShake;
 }
 
-int GetChaserProfileSoundCountToAlert(const char[] profile)
+int GetChaserProfileSoundCountToAlert(const char[] profile, int difficulty)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
-	return g_CachedProfileData.SoundCountToAlert;
+	return g_CachedProfileData.SoundCountToAlert[difficulty];
 }
 
 float GetChaserProfileCloakCooldown(const char[] profile,int difficulty)
@@ -2123,12 +2207,6 @@ void GetChaserProfileIdleMusics(const char[] profile, SF2BossProfileSoundInfo pa
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
 	params = g_CachedProfileData.IdleMusics;
-}
-
-void GetChaserProfileTwentyDollarMusics(const char[] profile, SF2BossProfileSoundInfo params)
-{
-	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
-	params = g_CachedProfileData.TwentyDollarsMusics;
 }
 
 int GetProfileAttackNum(const char[] profile, const char[] keyValue,int defaultValue=0, const int attackIndex)
