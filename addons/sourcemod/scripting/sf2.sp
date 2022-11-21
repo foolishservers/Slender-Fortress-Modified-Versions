@@ -1461,6 +1461,11 @@ public void TF2_OnConditionAdded(int client, TFCond cond)
 				g_PlayerProxyControl[client] = 0;
 			}
 		}
+
+		if (IsClientUsingFlashlight(client))
+		{
+			ClientHandleFlashlight(client);
+		}
 	}
 	if (cond == view_as<TFCond>(82))
 	{
@@ -2321,7 +2326,7 @@ void OnConVarChanged(Handle cvar, const char[] oldValue, const char[] intValue)
 				EmitSoundToAll(g_SoundNightmareMode[i]);
 			}
 			SpecialRoundGameText("Its Restart Session time!", "leaderboard_streak");
-			CPrintToChatAll("{royalblue}%t{default}Your thirst for blood continues? Very well, let the blood spill. Let the demons feed off your unfortunate soul... Difficulty set to {mediumslateblue}%t!", "SF2 Prefix", "SF2 Calamity Difficulty");
+			CPrintToChatAll("{royalblue}%t {default}Your thirst for blood continues? Very well, let the blood spill. Let the demons feed off your unfortunate soul... Difficulty set to {mediumslateblue}%t!", "SF2 Prefix", "SF2 Calamity Difficulty");
 			g_RestartSessionEnabled = true;
 			g_DifficultyConVar.SetInt(Difficulty_Apollyon);
 			g_IgnoreRoundWinConditionsConVar.SetBool(true);
@@ -2416,7 +2421,7 @@ void OnConVarChanged(Handle cvar, const char[] oldValue, const char[] intValue)
 		}
 		else
 		{
-			CPrintToChatAll("{royalblue}%t{default}You're done? Ok. Difficulty set to {darkgray}Apollyon.", "SF2 Prefix");
+			CPrintToChatAll("{royalblue}%t {default}You're done? Ok. Difficulty set to {darkgray}Apollyon.", "SF2 Prefix");
 			g_RestartSessionEnabled = false;
 			g_DifficultyConVar.SetInt(Difficulty_Apollyon);
 			g_IgnoreRoundWinConditionsConVar.SetBool(false);
@@ -2678,7 +2683,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 				}
 			}
 		}
-		else if (!g_PlayerEliminated[entity] && !g_PlayerEscaped[entity])
+		else if (!g_PlayerEliminated[entity] && !DidClientEscape(entity))
 		{
 			switch (channel)
 			{
@@ -2705,7 +2710,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 							GetClientAbsOrigin(entity, g_SlenderTargetSoundTempPos[bossIndex]);
 							g_SlenderInterruptConditions[bossIndex] |= COND_HEARDSUSPICIOUSSOUND;
 							g_SlenderInterruptConditions[bossIndex] |= COND_HEARDVOICE;
-							if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+							if (NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
 							{
 								g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
 								g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddVoice(bossIndex, difficulty);
@@ -2781,7 +2786,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								{
 									g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFOOTSTEP;
 								}
-								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+								if (NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
 								{
 									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
 									if (isLoudStep)
@@ -2815,7 +2820,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								GetClientAbsOrigin(entity, g_SlenderTargetSoundTempPos[bossIndex]);
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDSUSPICIOUSSOUND;
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDWEAPON;
-								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+								if (NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
 								{
 									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
 									g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddWeapon(bossIndex, difficulty);
@@ -2842,7 +2847,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								GetClientAbsOrigin(entity, g_SlenderTargetSoundTempPos[bossIndex]);
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDSUSPICIOUSSOUND;
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDFLASHLIGHT;
-								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+								if (NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
 								{
 									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
 									g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddWeapon(bossIndex, difficulty);
@@ -2866,7 +2871,7 @@ Action Hook_NormalSound(int clients[64], int &numClients, char sample[PLATFORM_M
 								GetClientAbsOrigin(entity, g_SlenderTargetSoundTempPos[bossIndex]);
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDSUSPICIOUSSOUND;
 								g_SlenderInterruptConditions[bossIndex] |= COND_HEARDVOICE;
-								if (g_SlenderState[bossIndex] == STATE_ALERT && NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
+								if (NPCChaserIsAutoChaseEnabled(bossIndex) && g_SlenderAutoChaseCooldown[bossIndex] < GetGameTime())
 								{
 									g_SlenderSoundTarget[bossIndex] = EntIndexToEntRef(entity);
 									g_SlenderAutoChaseCount[bossIndex] += NPCChaserAutoChaseAddVoice(bossIndex, difficulty) * 2;
@@ -3229,7 +3234,7 @@ void CollectPage(int page, int activator)
 					NPCGetBossName(_, bossName, sizeof(bossName), buffer);
 					EmitSoundToAll(SR_SOUND_SELECT_BR, _, SNDCHAN_AUTO, _, _, 0.75);
 					SpecialRoundGameText(bossName, "d_purgatory");
-					CPrintToChatAll("{royalblue}%t{default}Next on the roulette: {valve}%s", "SF2 Prefix", bossName); //Minimized HUD
+					CPrintToChatAll("{royalblue}%t {default}Next on the roulette: {valve}%s", "SF2 Prefix", bossName); //Minimized HUD
 				}
 				delete selectableBosses;
 			}
@@ -3243,7 +3248,7 @@ void CollectPage(int page, int activator)
 					NPCGetBossName(_, bossName, sizeof(bossName), buffer);
 					EmitSoundToAll(SR_SOUND_SELECT_BR, _, SNDCHAN_AUTO, _, _, 0.75);
 					SpecialRoundGameText(bossName, "d_purgatory");
-					CPrintToChatAll("{royalblue}%t{default}Next on the roulette: {valve}%s", "SF2 Prefix", bossName);
+					CPrintToChatAll("{royalblue}%t {default}Next on the roulette: {valve}%s", "SF2 Prefix", bossName);
 				}
 				delete selectableBosses;
 			}
@@ -3251,7 +3256,7 @@ void CollectPage(int page, int activator)
 		else
 		{
 			SpecialRoundGameText("You got lucky, no boss can be added.", "cappoint_progressbar_blocked");
-			CPrintToChatAll("{royalblue}%t{default}You got lucky, no boss can be added.", "SF2 Prefix");
+			CPrintToChatAll("{royalblue}%t {default}You got lucky, no boss can be added.", "SF2 Prefix");
 		}
 	}
 
