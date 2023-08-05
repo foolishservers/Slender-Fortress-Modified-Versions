@@ -160,6 +160,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error,int err_max)
 
 	CreateNative("SF2_IsBossStunnable", Native_IsBossStunnable);
 	CreateNative("SF2_IsBossStunnableByFlashlight", Native_IsBossStunnableByFlashlight);
+	CreateNative("SF2_CanBossDisappearOnStun", Native_CanBossDisappearOnStun);
 	CreateNative("SF2_IsBossCloaked", Native_IsBossCloaked);
 	CreateNative("SF2_GetBossStunHealth", Native_GetBossStunHealth);
 	CreateNative("SF2_SetBossStunHealth", Native_SetBossStunHealth);
@@ -900,6 +901,11 @@ static any Native_IsBossStunnable(Handle plugin, int numParams)
 static any Native_IsBossStunnableByFlashlight(Handle plugin, int numParams)
 {
 	return SF2NPC_Chaser(GetNativeCell(1)).StunByFlashlightEnabled;
+}
+
+static any Native_CanBossDisappearOnStun(Handle plugin, int numParams)
+{
+	return SF2NPC_Chaser(GetNativeCell(1)).CanDisappearOnStun;
 }
 
 static any Native_IsBossCloaked(Handle plugin, int numParams)

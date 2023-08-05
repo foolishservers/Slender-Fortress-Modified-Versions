@@ -276,9 +276,22 @@ bool LoadChaserBossProfile(KeyValues kv, const char[] profile, char[] loadFailRe
 			}
 			case SF2BossProjectileType_Grenade:
 			{
+				kv.GetString("grenade_model", profileData.GrenadeModel, sizeof(profileData.GrenadeModel), profileData.GrenadeModel);
 				kv.GetString("grenade_shoot_sound", profileData.GrenadeShootSound, sizeof(profileData.GrenadeShootSound), profileData.GrenadeShootSound);
 
 				TryPrecacheBossProfileSoundPath(profileData.GrenadeShootSound, _, g_FileCheckConVar.BoolValue);
+
+				if (strcmp(profileData.GrenadeModel, GRENADE_MODEL, true) != 0)
+				{
+					if (!PrecacheModel(profileData.GrenadeModel, true))
+					{
+						LogSF2Message("Grenade model file %s failed to be loaded, likely does not exist. This will crash the server if not fixed.", profileData.GrenadeModel);
+					}
+					else
+					{
+						PrecacheModel2(profileData.GrenadeModel, _, _, g_FileCheckConVar.BoolValue);
+					}
+				}
 			}
 			case SF2BossProjectileType_SentryRocket:
 			{
@@ -692,6 +705,8 @@ bool LoadChaserBossProfile(KeyValues kv, const char[] profile, char[] loadFailRe
 	}
 
 	profileData.ChaseOnLook = !!kv.GetNum("auto_chase_upon_look", profileData.ChaseOnLook);
+
+	profileData.DontFollowPlayerWhileAlert = !!kv.GetNum("dont_follow_player_while_alert", profileData.DontFollowPlayerWhileAlert);
 
 	GetProfileDifficultyFloatValues(kv, "awareness_rate_increase", profileData.AwarenessIncreaseRate, profileData.AwarenessIncreaseRate);
 	GetProfileDifficultyFloatValues(kv, "awareness_rate_decrease", profileData.AwarenessDecreaseRate, profileData.AwarenessDecreaseRate);
@@ -1259,6 +1274,11 @@ static int ParseChaserProfileAttacks(KeyValues kv, SF2ChaserBossProfileData chas
 
 		GetProfileDifficultyBoolValues(kv, "cancel_los", attackData.CancelLos, attackData.CancelLos);
 		GetProfileDifficultyFloatValues(kv, "cancel_distance", attackData.CancelDistance, attackData.CancelDistance);
+
+		GetProfileDifficultyBoolValues(kv, "jump_enabled", attackData.AttackWithJump, attackData.AttackWithJump);
+		GetProfileDifficultyFloatValues(kv, "jump_duration", attackData.JumpDuration, attackData.JumpDuration);
+		GetProfileDifficultyFloatValues(kv, "jump_speed_multiplier", attackData.JumpSpeed, attackData.JumpSpeed);
+		GetProfileDifficultyFloatValues(kv, "jump_delay", attackData.JumpDelay, attackData.JumpDelay);
 
 		attacks.SetArray(attackNum - 1, attackData, sizeof(attackData));
 

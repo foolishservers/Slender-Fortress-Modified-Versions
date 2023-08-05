@@ -246,7 +246,6 @@ void SlenderChaseBossProcessMovement(int bossEnt)
 						{
 							changeAngle = true;
 							GetEntPropVector(target, Prop_Data, "m_vecAbsOrigin", posToAt);
-
 						}
 					}
 
@@ -332,6 +331,26 @@ void SlenderChaseBossProcessMovement(int bossEnt)
 				{
 					pfUpdate = true;
 					loco.Run();
+				}
+				else
+				{
+					if (NPCChaserGetAttackWithJump(bossIndex, attackIndex, difficulty))
+					{
+						if (GetGameTime() < g_NpcBaseAttackJumpDurationTime[bossIndex][attackIndex])
+						{
+							if (!loco.IsClimbingOrJumping() && loco.IsOnGround())
+							{
+								int target = EntRefToEntIndex(g_SlenderTarget[bossIndex]);
+								if (target && target != INVALID_ENT_REFERENCE)
+								{
+									float targetPos[3];
+									GetEntPropVector(target, Prop_Data, "m_vecAbsOrigin", targetPos);
+									float jumpSpeed = NPCChaserGetAttackJumpSpeed(bossIndex, attackIndex, difficulty);
+									CBaseNPC_JumpWithSpeed(loco, myPos, targetPos, jumpSpeed);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1188,4 +1207,55 @@ bool SlenderChaseBoss_OnStuckResolvePath(int slender, float myPos[3], float myAn
 		attemp++;
 	}
 	return false;
+}
+
+void CBaseNPC_JumpWithSpeed(NextBotGroundLocomotion nextbotLocomotion, float startPos[3], float endPos[3], float jumpSpeedMult)
+{
+	float jumpVel[3];
+	endPos[2] += nextbotLocomotion.GetStepHeight();
+	float actualHeight = endPos[2] - startPos[2];
+	float height = actualHeight;
+	if (height < 16.0)
+	{
+		height = 16.0;
+	}
+
+	float additionalHeight = 20.0;
+	if (height < 32.0)
+	{
+		additionalHeight += 8.0;
+	}
+	float gravity = nextbotLocomotion.GetGravity();
+
+	height += additionalHeight;
+
+	float speed = SquareRoot(2.0 * gravity * height);
+	float time = (speed / gravity);
+
+	time += SquareRoot((2.0 * additionalHeight) / gravity);
+
+	SubtractVectors(endPos, startPos, jumpVel);
+	jumpVel[0] /= time;
+	jumpVel[1] /= time;
+	jumpVel[2] /= time;
+
+	jumpVel[2] = speed;
+
+	float flJumpSpeed = GetVectorLength(jumpVel, true);
+	float flMaxSpeed = SquareFloat(650.0);
+	if (flJumpSpeed > flMaxSpeed)
+	{
+		jumpVel[0] *= (flMaxSpeed / flJumpSpeed);
+		jumpVel[1] *= (flMaxSpeed / flJumpSpeed);
+		jumpVel[2] *= (flMaxSpeed / flJumpSpeed);
+	}
+
+	if (jumpSpeedMult != 1.0)
+	{
+		jumpVel[0] *= jumpSpeedMult;
+		jumpVel[1] *= jumpSpeedMult;
+	}
+
+	nextbotLocomotion.Jump();
+	nextbotLocomotion.SetVelocity(jumpVel);
 }

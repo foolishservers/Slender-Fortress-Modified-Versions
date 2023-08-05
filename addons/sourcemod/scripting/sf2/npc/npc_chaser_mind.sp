@@ -466,7 +466,7 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 			g_NpcInAutoChase[chaserBoss.Index] = true;
 		}
 
-		if (NPCChaserIsAutoChaseEnabled(chaserBoss.Index))
+		if (NPCChaserIsAutoChaseEnabled(chaserBoss.Index)) // Sex
 		{
 			if (IsValidClient(soundTarget) && g_SlenderAutoChaseCount[chaserBoss.Index] >= NPCChaserAutoChaseThreshold(chaserBoss.Index, difficulty) && state != STATE_CHASE && state != STATE_ATTACK && state != STATE_STUN)
 			{
@@ -531,7 +531,7 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 			{
 				bestNewTarget = player.index;
 				state = STATE_CHASE;
-				SlenderAlertAllValidBosses(chaserBoss.Index, player.index, bestNewTarget);
+				SlenderAlertAllValidBosses(chaserBoss.Index, player.index, bestNewTarget);	// Sex
 				player.GetAbsOrigin(g_SlenderGoalPos[chaserBoss.Index]);
 				g_SlenderTimeUntilNoPersistence[chaserBoss.Index] = gameTime + NPCChaserGetChaseDuration(chaserBoss.Index, difficulty);
 				g_SlenderTimeUntilAlert[chaserBoss.Index] = gameTime + NPCChaserGetChaseDuration(chaserBoss.Index, difficulty);
@@ -857,13 +857,17 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 					TriggerTimer(g_SlenderChaseInitialTimer[chaserBoss.Index]);
 				}
 				g_SlenderTimeUntilIdle[chaserBoss.Index] = gameTime + NPCChaserGetAlertDuration(chaserBoss.Index, difficulty);
-				int clientToPos = EntRefToEntIndex(g_SlenderSeeTarget[chaserBoss.Index]);
-				float clientPosition[3];
-				if (IsValidClient(clientToPos))
+
+				if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
 				{
-					GetClientAbsOrigin(clientToPos, clientPosition);
-					bestNewTarget = clientToPos;
-					chaserBoss.SetGoalPos(clientPosition);
+					int clientToPos = EntRefToEntIndex(g_SlenderSeeTarget[chaserBoss.Index]);
+					float clientPosition[3];
+					if (IsValidClient(clientToPos))
+					{
+						GetClientAbsOrigin(clientToPos, clientPosition);
+						bestNewTarget = clientToPos;
+						chaserBoss.SetGoalPos(clientPosition);
+					}
 				}
 			}
 			else if (interruptConditions & COND_HEARDSUSPICIOUSSOUND)
@@ -917,7 +921,7 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 				{
 					// Someone's making some noise over there! Time to investigate.
 					g_SlenderInvestigatingSound[chaserBoss.Index] = true; // This is just so that our sound position would be the goal position.
-					state = STATE_ALERT;
+					state = STATE_ALERT;	// 이거 봐야함
 					if (g_SlenderChaseInitialTimer[chaserBoss.Index] != null)
 					{
 						TriggerTimer(g_SlenderChaseInitialTimer[chaserBoss.Index]);
@@ -1011,15 +1015,30 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 
 					if (building || ((playerNear[bestNewTarget] || playerInFOV[bestNewTarget]) && playerVisible[bestNewTarget]))
 					{
-						// AHAHAHAH! I GOT YOU NOW!
-						target = bestNewTarget;
-						g_SlenderTarget[chaserBoss.Index] = EntIndexToEntRef(bestNewTarget);
-						state = STATE_CHASE;
-						GetClientAbsOrigin(bestNewTarget, g_SlenderGoalPos[chaserBoss.Index]);
-						SlenderAlertAllValidBosses(chaserBoss.Index, target, bestNewTarget);
+						if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
+						{
+							// AHAHAHAH! I GOT YOU NOW!
+							target = bestNewTarget;
+							g_SlenderTarget[chaserBoss.Index] = EntIndexToEntRef(bestNewTarget);
+							state = STATE_CHASE;
+							GetClientAbsOrigin(bestNewTarget, g_SlenderGoalPos[chaserBoss.Index]);
+							SlenderAlertAllValidBosses(chaserBoss.Index, target, bestNewTarget);
+						}
+						else
+						{
+							if ((chaserBoss.Flags & SFF_WANDERMOVE) && gameTime >= g_SlenderNextWanderPos[chaserBoss.Index][difficulty] && GetRandomFloat(0.0, 1.0) <= 0.25 &&
+								difficulty >= RoundToNearest(chaserBoss.GetAttributeValue(SF2Attribute_BlockWalkSpeedUnderDifficulty)) && NPCGetWanderPosition(chaserBoss))
+							{
+								target = bestNewTarget;
+								g_SlenderTarget[chaserBoss.Index] = EntIndexToEntRef(bestNewTarget);
+								float min = GetChaserProfileWanderTimeMin(slenderProfile, difficulty);
+								float max = GetChaserProfileWanderTimeMax(slenderProfile, difficulty);
+								g_SlenderNextWanderPos[chaserBoss.Index][difficulty] = gameTime + GetRandomFloat(min, max);
+							}
+						}
 					}
 				}
-				if (playerInTrap[bestNewTarget] || playerMadeNoise[bestNewTarget])
+				if (playerInTrap[bestNewTarget])
 				{
 					// AHAHAHAH! I GOT YOU NOW!
 					target = bestNewTarget;
@@ -1027,6 +1046,31 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 					state = STATE_CHASE;
 					GetClientAbsOrigin(bestNewTarget, g_SlenderGoalPos[chaserBoss.Index]);
 					SlenderAlertAllValidBosses(chaserBoss.Index, target, bestNewTarget);
+				}
+				
+				if (playerMadeNoise[bestNewTarget]) 
+				{
+					if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
+					{
+						// AHAHAHAH! I GOT YOU NOW!
+						target = bestNewTarget;
+						g_SlenderTarget[chaserBoss.Index] = EntIndexToEntRef(bestNewTarget);
+						state = STATE_CHASE;
+						GetClientAbsOrigin(bestNewTarget, g_SlenderGoalPos[chaserBoss.Index]);
+						SlenderAlertAllValidBosses(chaserBoss.Index, target, bestNewTarget);
+					}
+					else
+					{
+						if ((chaserBoss.Flags & SFF_WANDERMOVE) && gameTime >= g_SlenderNextWanderPos[chaserBoss.Index][difficulty] && GetRandomFloat(0.0, 1.0) <= 0.25 &&
+							difficulty >= RoundToNearest(chaserBoss.GetAttributeValue(SF2Attribute_BlockWalkSpeedUnderDifficulty)) && NPCGetWanderPosition(chaserBoss))
+						{
+							target = bestNewTarget;
+							g_SlenderTarget[chaserBoss.Index] = EntIndexToEntRef(bestNewTarget);
+							float min = GetChaserProfileWanderTimeMin(slenderProfile, difficulty);
+							float max = GetChaserProfileWanderTimeMax(slenderProfile, difficulty);
+							g_SlenderNextWanderPos[chaserBoss.Index][difficulty] = gameTime + GetRandomFloat(min, max);
+						}
+					}
 				}
 			}
 			if ((building))
@@ -1039,7 +1083,10 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 				{
 					if (IsValidClient(bestNewTarget))
 					{
-						chaserBoss.SetGoalPos(g_SlenderLastFoundPlayerPos[chaserBoss.Index][bestNewTarget]);
+						if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
+						{
+							chaserBoss.SetGoalPos(g_SlenderLastFoundPlayerPos[chaserBoss.Index][bestNewTarget]);
+						}
 					}
 				}
 				else if (interruptConditions & COND_HEARDSUSPICIOUSSOUND)
@@ -1080,7 +1127,10 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 						g_SlenderTargetSoundMasterPos[chaserBoss.Index][2] = g_SlenderTargetSoundTempPos[chaserBoss.Index][2];
 
 						// We have to manually set the goal position here because the goal position will not be changed due to no change in state.
-						chaserBoss.SetGoalPos(g_SlenderTargetSoundMasterPos[chaserBoss.Index]);
+						if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
+						{
+							chaserBoss.SetGoalPos(g_SlenderTargetSoundMasterPos[chaserBoss.Index]);
+						}
 
 						g_SlenderInvestigatingSound[chaserBoss.Index] = true;
 					}
@@ -1528,7 +1578,7 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 				if (gameTime >= g_SlenderTimeUntilRecover[chaserBoss.Index])
 				{
 					g_LastStuckTime[chaserBoss.Index] = 0.0;
-					if (chaserBoss.CanDisappearOnStun())
+					if (chaserBoss.CanDisappearOnStun)
 					{
 						RemoveSlender(chaserBoss.Index);
 					}
@@ -2121,7 +2171,10 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 				// Set our goal position.
 				if (g_SlenderInvestigatingSound[chaserBoss.Index])
 				{
-					chaserBoss.SetGoalPos(g_SlenderTargetSoundMasterPos[chaserBoss.Index]);
+					if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
+					{
+						chaserBoss.SetGoalPos(g_SlenderTargetSoundMasterPos[chaserBoss.Index]);
+					}
 				}
 
 				g_SlenderTimeUntilIdle[chaserBoss.Index] = gameTime + NPCChaserGetAlertDuration(chaserBoss.Index, difficulty);
@@ -2177,7 +2230,7 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 						CBaseNPC_RemoveAllLayers(npcEntity.index);
 						loco.ClearStuckStatus();
 						int attackIndex = NPCGetCurrentAttackIndex(chaserBoss.Index);
-						if (!NPCChaserGetAttackWhileRunningState(chaserBoss.Index, attackIndex, difficulty))
+						if (!NPCChaserGetAttackWhileRunningState(chaserBoss.Index, attackIndex, difficulty) && !NPCChaserGetAttackWithJump(chaserBoss.Index, attackIndex, difficulty))
 						{
 							npc.flWalkSpeed = 0.0;
 							npc.flRunSpeed = 0.0;
@@ -2212,6 +2265,8 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 						g_NpcBaseAttackRunDurationTime[chaserBoss.Index][attackIndex] = gameTime + NPCChaserGetAttackRunDuration(chaserBoss.Index, attackIndex, difficulty);
 
 						g_NpcBaseAttackRunDelayTime[chaserBoss.Index][attackIndex] = gameTime + NPCChaserGetAttackRunDelay(chaserBoss.Index, attackIndex, difficulty);
+
+						g_NpcBaseAttackJumpDurationTime[chaserBoss.Index][attackIndex] = gameTime + NPCChaserGetAttackJumpDuration(chaserBoss.Index, attackIndex, difficulty);
 
 						float persistencyTime = GetChaserProfileChaseAttackPersistencyTimeInit(slenderProfile);
 						if (persistencyTime >= 0.0)
@@ -2447,15 +2502,18 @@ Action Timer_SlenderChaseBossThink(Handle timer, any entref) //God damn you are 
 			{
 				if (interruptConditions & COND_SAWENEMY)
 				{
-					if (IsValidEntity(bestNewTarget))
+					if (!NPCChaserDontFollowPlayerWhileAlert(chaserBoss.Index))
 					{
-						if ((building) || (((playerInFOV[bestNewTarget] || playerNear[bestNewTarget]) && playerVisible[bestNewTarget]) || (playerMadeNoise[bestNewTarget] || playerInTrap[bestNewTarget])))
+						if (IsValidEntity(bestNewTarget))
 						{
-							// Constantly update my path if I see him.
-							if (gameTime >= g_SlenderNextPathTime[chaserBoss.Index])
+							if ((building) || (((playerInFOV[bestNewTarget] || playerNear[bestNewTarget]) && playerVisible[bestNewTarget]) || (playerMadeNoise[bestNewTarget] || playerInTrap[bestNewTarget])))
 							{
-								GetEntPropVector(bestNewTarget, Prop_Data, "m_vecAbsOrigin", g_SlenderGoalPos[chaserBoss.Index]);
-								g_SlenderNextPathTime[chaserBoss.Index] = gameTime + 0.4;
+								// Constantly update my path if I see him.
+								if (gameTime >= g_SlenderNextPathTime[chaserBoss.Index])
+								{
+									GetEntPropVector(bestNewTarget, Prop_Data, "m_vecAbsOrigin", g_SlenderGoalPos[chaserBoss.Index]);
+									g_SlenderNextPathTime[chaserBoss.Index] = gameTime + 0.4;
+								}
 							}
 						}
 					}

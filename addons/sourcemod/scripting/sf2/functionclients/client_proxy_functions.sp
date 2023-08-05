@@ -1639,17 +1639,27 @@ Action Timer_ClientPostWeapons(Handle timer, any userid)
 				{
 					TF2_RemoveWeaponSlot(client, slot);
 
-					weaponHandle = PrepareItemHandle("tf_weapon_knife", 649, 0, 0, "");
+					weaponHandle = PrepareItemHandle("tf_weapon_knife", 649, 0, 0, "60 ; 0.5");
 					int entity = TF2Items_GiveNamedItem(client, weaponHandle);
 					delete weaponHandle;
 					weaponHandle = null;
 					EquipPlayerWeapon(client, entity);
 				}
-				case 574: //Spy-cicle
+				case 574: //The Wanga Prick
 				{
 					TF2_RemoveWeaponSlot(client, slot);
 
 					weaponHandle = PrepareItemHandle("tf_weapon_knife", 574, 0, 0, "");
+					int entity = TF2Items_GiveNamedItem(client, weaponHandle);
+					delete weaponHandle;
+					weaponHandle = null;
+					EquipPlayerWeapon(client, entity);
+				}
+				case 307: // Ullapool Caber
+				{
+					TF2_RemoveWeaponSlot(client, slot);
+
+					weaponHandle = PrepareItemHandle("tf_weapon_stickbomb", 307, 0, 0, "5 ; 1.2 ; 15 ; 0.0 ; 135 ; 0.0");
 					int entity = TF2Items_GiveNamedItem(client, weaponHandle);
 					delete weaponHandle;
 					weaponHandle = null;
@@ -1830,7 +1840,7 @@ public Action TF2Items_OnGiveNamedItem(int client, char[] classname, int itemDef
 	{
 		case 642:
 		{
-			Handle itemOverride = PrepareItemHandle("tf_wearable", 642, 0, 0, "376 ; 1.0 ; 377 ; 0.2 ; 57 ; 2 ; 412 ; 1.10");
+			Handle itemOverride = PrepareItemHandle("tf_wearable", 642, 0, 0, "376 ; 1.0 ; 377 ; 0.2 ; 57 ; 4");
 
 			if (itemOverride != null)
 			{

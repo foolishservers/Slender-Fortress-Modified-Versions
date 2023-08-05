@@ -1760,6 +1760,14 @@ static Action Timer_SlenderChaseBossAttackEnd(Handle timer, any entref)
 
 	CBaseNPC npc = TheNPCs.FindNPCByEntIndex(slender);
 	CBaseNPC_Locomotion loco = npc.GetLocomotion();
+
+	int difficulty = GetLocalGlobalDifficulty(bossIndex);
+	int currentAttackIndex = NPCGetCurrentAttackIndex(bossIndex);
+	if (NPCChaserGetAttackWithJump(bossIndex, currentAttackIndex, difficulty))
+	{
+		loco.Stop();
+	}
+
 	loco.ClearStuckStatus();
 
 	g_IsSlenderAttacking[bossIndex] = false;

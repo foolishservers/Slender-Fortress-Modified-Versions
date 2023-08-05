@@ -79,8 +79,8 @@ Action Event_RoundStart(Handle event, const char[] name, bool dB)
 
 		SetRoundState(SF2RoundState_Waiting);
 
-		ServerCommand("mp_restartgame 15");
-		PrintCenterTextAll("Round restarting in 15 seconds");
+		ServerCommand("mp_restartgame %d", g_WarmupTimeConVar.IntValue);
+		PrintCenterTextAll("Round restarting in %d seconds", g_WarmupTimeConVar.IntValue);
 	}
 	else
 	{
@@ -1445,6 +1445,7 @@ Action Event_PlayerHurt(Handle event, const char[] name, bool dB)
 	return Plugin_Continue;
 }
 
+float thanaphopiaPreventDeathRelay;
 Action Event_PlayerDeath(Event event, const char[] name, bool dB)
 {
 	if (!g_Enabled)
@@ -1561,8 +1562,10 @@ Action Event_PlayerDeath(Event event, const char[] name, bool dB)
 				{
 					CreateTimer(0.25, Timer_ToggleGhostModeCommand, GetClientUserId(client), TIMER_FLAG_NO_MAPCHANGE);
 				}
-				if (SF_SpecialRound(SPECIALROUND_THANATOPHOBIA) && IsRoundPlaying() && !DidClientEscape(client))
+				if (SF_SpecialRound(SPECIALROUND_THANATOPHOBIA) && IsRoundPlaying() && !DidClientEscape(client) && thanaphopiaPreventDeathRelay < GetGameTime())
 				{
+					thanaphopiaPreventDeathRelay = GetGameTime() + 5.0;
+					
 					for (int reds = 1; reds <= MaxClients; reds++)
 					{
 						if (!IsValidClient(reds) ||
@@ -1744,7 +1747,9 @@ Action Event_PlayerDeath(Event event, const char[] name, bool dB)
 		ClientUpdateListeningFlags(client);
 
 		// Half-Zatoichi nerf code.
-		int katanaHealthGain = 5;
+		int katanaHealthGain = 10;
+		int warriorspiritHealthGain = 25;
+		int ullapoolHealthGain = 20;
 		if (katanaHealthGain >= 0)
 		{
 			int attacker = GetClientOfUserId(event.GetInt("attacker"));
@@ -1763,6 +1768,27 @@ Action Event_PlayerDeath(Event event, const char[] name, bool dB)
 						WritePackCell(pack, attackerPreHealth + katanaHealthGain);
 
 						CreateTimer(0.0, Timer_SetPlayerHealth, pack, TIMER_FLAG_NO_MAPCHANGE);
+					}
+					else if (strcmp(weaponClass, "warrior_spirit") == 0)
+					{
+						int attackerPreHealth = GetEntProp(attacker, Prop_Send, "m_iHealth");
+						Handle pack = CreateDataPack();
+						WritePackCell(pack, GetClientUserId(attacker));
+						WritePackCell(pack, attackerPreHealth + warriorspiritHealthGain);
+
+						CreateTimer(0.0, Timer_SetPlayerHealth, pack, TIMER_FLAG_NO_MAPCHANGE);
+					}
+					else if (strcmp(weaponClass, "ullapool_caber") == 0)
+					{
+						int attackerPreHealth = GetEntProp(attacker, Prop_Send, "m_iHealth");
+						Handle pack = CreateDataPack();
+						WritePackCell(pack, GetClientUserId(attacker));
+						WritePackCell(pack, attackerPreHealth + ullapoolHealthGain);
+
+						CreateTimer(0.0, Timer_SetPlayerHealth, pack, TIMER_FLAG_NO_MAPCHANGE);
+					}
+					else
+					{
 					}
 				}
 			}

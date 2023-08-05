@@ -243,6 +243,9 @@ static float g_NpcCrawlSpeedMultiplier[MAX_BOSSES][Difficulty_Max];
 float g_NpcCrawlDetectMins[MAX_BOSSES][3];
 float g_NpcCrawlDetectMaxs[MAX_BOSSES][3];
 
+//New Stuff
+bool g_NpcDontFollowPlayerWhileAlert[MAX_BOSSES] = { false, ... };
+
 enum struct BaseAttackStructure
 {
 	int baseAttackType;
@@ -308,6 +311,11 @@ enum struct BaseAttackStructure
 	float baseAttackUseOnHealth;
 	float baseAttackBlockOnHealth;
 	bool baseAttackDontInterruptChaseInitial;
+
+	bool baseAttackWithJump;
+	float baseAttackJumpDuration;
+	float baseAttackJumpSpeed;
+	float baseAttackJumpDelay;
 }
 
 int g_SlenderOldState[MAX_BOSSES];
@@ -318,6 +326,8 @@ BaseAttackStructure g_NpcBaseAttacks[MAX_BOSSES][SF2_CHASER_BOSS_MAX_ATTACKS][Di
 static int g_NpcCurrentAttackIndex[MAX_BOSSES];
 float g_NpcBaseAttackRunDurationTime[MAX_BOSSES][SF2_CHASER_BOSS_MAX_ATTACKS];
 float g_NpcBaseAttackRunDelayTime[MAX_BOSSES][SF2_CHASER_BOSS_MAX_ATTACKS];
+
+float g_NpcBaseAttackJumpDurationTime[MAX_BOSSES][SF2_CHASER_BOSS_MAX_ATTACKS];
 
 #include "sf2/npc/npc_chaser_mind.sp"
 #include "sf2/npc/npc_chaser_attacks.sp"
@@ -1420,6 +1430,31 @@ bool NPCChaserCanChaseOnLook(int npcIndex)
 	return g_NpcChaseOnLook[npcIndex];
 }
 
+bool NPCChaserDontFollowPlayerWhileAlert(int npcIndex)
+{
+	return g_NpcDontFollowPlayerWhileAlert[npcIndex];
+}
+
+bool NPCChaserGetAttackWithJump(int npcIndex, int attackIndex, int difficulty)
+{
+	return g_NpcBaseAttacks[npcIndex][attackIndex][difficulty].baseAttackWithJump;
+}
+
+float NPCChaserGetAttackJumpDuration(int npcIndex, int attackIndex, int difficulty)
+{
+	return g_NpcBaseAttacks[npcIndex][attackIndex][difficulty].baseAttackJumpDuration;
+}
+
+float NPCChaserGetAttackJumpSpeed(int npcIndex, int attackIndex, int difficulty)
+{
+	return g_NpcBaseAttacks[npcIndex][attackIndex][difficulty].baseAttackJumpSpeed;
+}
+
+//float NPCChaserGetAttackJumpDelay(int npcIndex, int attackIndex, int difficulty)
+//{
+//	return g_NpcBaseAttacks[npcIndex][attackIndex][difficulty].baseAttackJumpDelay;
+//}
+
 void NPCChaserOnSelectProfile(int npcIndex, bool invincible)
 {
 	char profile[SF2_MAX_PROFILE_NAME_LENGTH];
@@ -1542,6 +1577,11 @@ void NPCChaserOnSelectProfile(int npcIndex, bool invincible)
 			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackLaserDuration = GetChaserProfileAttackLaserDuration(profile, i, diffAtk);
 
 			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackDontInterruptChaseInitial = GetChaserProfileAttackChaseInitialInterruptState(profile, i, diffAtk);
+
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackWithJump = GetChaserProfileAttackWithJump(profile, i, diffAtk);
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpDuration = GetChaserProfileAttackJumpDuration(profile, i, diffAtk);
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpSpeed = GetChaserProfileAttackJumpSpeed(profile, i, diffAtk);
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpDelay = GetChaserProfileAttackJumpDelay(profile, i, diffAtk);
 		}
 		g_NpcBaseAttacks[npcIndex][i][1].baseAttackDamageVsProps = GetChaserProfileAttackDamageVsProps(profile, i);
 		g_NpcBaseAttacks[npcIndex][i][1].baseAttackRepeat = GetChaserProfileAttackRepeat(profile, i);
@@ -1678,6 +1718,7 @@ void NPCChaserOnSelectProfile(int npcIndex, bool invincible)
 	GetChaserProfileRocketExplodeParticle(profile, g_SlenderRocketExplodeParticle[npcIndex], sizeof(g_SlenderRocketExplodeParticle[]));
 	GetChaserProfileSentryRocketShootSound(profile, g_SlenderSentryRocketShootSound[npcIndex], sizeof(g_SlenderSentryRocketShootSound[]));
 
+	GetChaserProfileGrenadeModel(profile, g_SlenderGrenadeModel[npcIndex], sizeof(g_SlenderGrenadeModel[]));
 	GetChaserProfileGrenadeShootSound(profile, g_SlenderGrenadeShootSound[npcIndex], sizeof(g_SlenderGrenadeShootSound[]));
 
 	GetChaserProfileArrowShootSound(profile, g_SlenderArrowShootSound[npcIndex], sizeof(g_SlenderArrowShootSound[]));
@@ -1802,6 +1843,8 @@ void NPCChaserOnSelectProfile(int npcIndex, bool invincible)
 	g_NpcBoxingRagePhase[npcIndex] = 0;
 
 	g_NpcCopyAlerted[npcIndex] = false;
+
+	g_NpcDontFollowPlayerWhileAlert[npcIndex] = GetChaserProfileDontFollowPlayerWhileAlert(profile);
 }
 
 void NPCChaserOnRemoveProfile(int npcIndex)
@@ -1930,6 +1973,11 @@ static void NPCChaserResetValues(int npcIndex)
 			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackLaserDuration = 0.0;
 
 			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackDontInterruptChaseInitial = false;
+
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackWithJump = false;
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpDuration = 0.0;
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpSpeed = 0.0;
+			g_NpcBaseAttacks[npcIndex][i][diffAtk].baseAttackJumpDelay = 0.0;
 		}
 		g_NpcBaseAttacks[npcIndex][i][1].baseAttackDamageVsProps = 0.0;
 		g_NpcBaseAttacks[npcIndex][i][1].baseAttackRepeat = 0;
@@ -2101,6 +2149,8 @@ static void NPCChaserResetValues(int npcIndex)
 	g_NpcBoxingRagePhase[npcIndex] = 0;
 
 	g_NpcCopyAlerted[npcIndex] = false;
+
+	g_NpcDontFollowPlayerWhileAlert[npcIndex] = false;
 }
 
 void Spawn_Chaser(int bossIndex)

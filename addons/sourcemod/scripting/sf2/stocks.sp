@@ -855,6 +855,7 @@ void SpecialRoundGameText(const char[] message, const char[] icon = "")
 	AcceptEntityInput(entity, "Display", entity, entity); //The only time I keep this.
 	CreateTimer(2.0, Timer_KillEntity, EntIndexToEntRef(entity), TIMER_FLAG_NO_MAPCHANGE);
 }
+
 // Removes wearables such as botkillers from weapons.
 void TF2_RemoveWeaponSlotAndWearables(int client,int slot)
 {

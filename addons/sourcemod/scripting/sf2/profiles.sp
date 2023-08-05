@@ -1333,8 +1333,13 @@ static any Native_GetBossProfileVector(Handle plugin,int numParams)
 
 static any Native_GetBossProfileDifficultyNumValues(Handle plugin,int numParams)
 {
-	char keyValue[PLATFORM_MAX_PATH];
-	GetNativeString(2, keyValue, sizeof(keyValue));
+	//char keyValue[PLATFORM_MAX_PATH];
+	//GetNativeString(2, keyValue, sizeof(keyValue));
+	int len;
+	GetNativeStringLength(2, len);
+	char[] keyValue = new char[len + 1];
+	GetNativeString(2, keyValue, len + 1);
+
 	int result[Difficulty_Max];
 	int defaultValue[Difficulty_Max];
 	GetNativeArray(3, result, Difficulty_Max);
@@ -1345,8 +1350,13 @@ static any Native_GetBossProfileDifficultyNumValues(Handle plugin,int numParams)
 
 static any Native_GetBossProfileDifficultyBoolValues(Handle plugin,int numParams)
 {
-	char keyValue[PLATFORM_MAX_PATH];
-	GetNativeString(2, keyValue, sizeof(keyValue));
+	//char keyValue[PLATFORM_MAX_PATH];
+	//GetNativeString(2, keyValue, sizeof(keyValue));
+	int len;
+	GetNativeStringLength(2, len);
+	char[] keyValue = new char[len + 1];
+	GetNativeString(2, keyValue, len + 1);
+
 	bool result[Difficulty_Max];
 	bool defaultValue[Difficulty_Max];
 	GetNativeArray(3, result, Difficulty_Max);
@@ -1357,8 +1367,13 @@ static any Native_GetBossProfileDifficultyBoolValues(Handle plugin,int numParams
 
 static any Native_GetBossProfileDifficultyFloatValues(Handle plugin,int numParams)
 {
-	char keyValue[PLATFORM_MAX_PATH];
-	GetNativeString(2, keyValue, sizeof(keyValue));
+	//char keyValue[PLATFORM_MAX_PATH];
+	//GetNativeString(2, keyValue, sizeof(keyValue));
+	int len;
+	GetNativeStringLength(2, len);
+	char[] keyValue = new char[len + 1];
+	GetNativeString(2, keyValue, len + 1);
+	
 	float result[Difficulty_Max];
 	float defaultValue[Difficulty_Max];
 	GetNativeArray(3, result, Difficulty_Max);

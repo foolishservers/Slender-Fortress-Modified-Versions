@@ -391,6 +391,7 @@ int NPCChaserProjectileShoot(int bossIndex, int slender, int target, const char[
 						SetEntPropEnt(projectileEnt, Prop_Send, "m_hOwnerEntity", slender);
 						SetEntPropFloat(projectileEnt, Prop_Send, "m_DmgRadius", NPCChaserGetProjectileRadius(bossIndex, difficulty));
 						SetEntPropFloat(projectileEnt, Prop_Send, "m_flDamage",  NPCChaserGetProjectileDamage(bossIndex, difficulty));
+						SetEntityModel(projectileEnt, g_SlenderGrenadeModel[bossIndex]);
 						TeleportEntity(projectileEnt, NULL_VECTOR, NULL_VECTOR, velocity);
 						SetEntDataFloat(projectileEnt, g_FullDamageData, NPCChaserGetProjectileDamage(bossIndex, difficulty));
 						ProjectileSetFlags(projectileEnt, PROJ_GRENADE);

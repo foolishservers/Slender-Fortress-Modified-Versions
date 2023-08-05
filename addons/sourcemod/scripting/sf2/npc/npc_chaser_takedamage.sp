@@ -226,12 +226,12 @@ Action Hook_SlenderOnTakeDamage(int victim, int &attacker, int &inflictor, float
 			miniCrit = false;
 		}
 	}
-	if (IsValidClient(attacker) && SF_IsBoxingMap() && TF2_GetPlayerClass(attacker) == TFClass_DemoMan)
+	if (IsValidClient(attacker) && TF2_GetPlayerClass(attacker) == TFClass_DemoMan)
 	{
 		int sword = GetPlayerWeaponSlot(attacker, TFWeaponSlot_Melee);
 		if (IsValidEntity(sword) &&
 		(GetEntProp(sword, Prop_Send, "m_iItemDefinitionIndex") == 132 || GetEntProp(sword, Prop_Send, "m_iItemDefinitionIndex") == 266 || GetEntProp(sword, Prop_Send, "m_iItemDefinitionIndex") == 482 || GetEntProp(sword, Prop_Send, "m_iItemDefinitionIndex") == 1082)
-		&& sword == GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon") && SF_IsBoxingMap() && !NPCIsRaging(bossIndex))
+		&& sword == GetEntPropEnt(attacker, Prop_Send, "m_hActiveWeapon") && !NPCIsRaging(bossIndex))
 		{
 			g_PlayerHitsToHeads[attacker]++;
 			if (g_PlayerHitsToHeads[attacker] == 5)
@@ -243,13 +243,13 @@ Action Hook_SlenderOnTakeDamage(int victim, int &attacker, int &inflictor, float
 				int decapitations = GetEntProp(attacker, Prop_Send, "m_iDecapitations");
 				int health = GetClientHealth(attacker);
 				SetEntProp(attacker, Prop_Send, "m_iDecapitations", decapitations+1);
-				SetEntityHealth(attacker, health+15);
+				SetEntityHealth(attacker, health + 15);
 				TF2_AddCondition(attacker, TFCond_SpeedBuffAlly, 0.01);
 				g_PlayerHitsToHeads[attacker] = 0;
 			}
 		}
 	}
-	if (IsValidClient(attacker) && SF_IsBoxingMap() && TF2_GetPlayerClass(attacker) == TFClass_Spy)
+	if (IsValidClient(attacker) && TF2_GetPlayerClass(attacker) == TFClass_Spy)
 	{
 		int stabbingTime = GetPlayerWeaponSlot(attacker, TFWeaponSlot_Melee);
 		char weaponClass[64];

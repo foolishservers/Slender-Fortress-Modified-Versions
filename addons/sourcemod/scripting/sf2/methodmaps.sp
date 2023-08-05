@@ -1284,9 +1284,12 @@ methodmap SF2NPC_Chaser < SF2NPC_BaseNPC
 		NPCChaserAddStunHealth(this.Index, amount);
 	}
 
-	public bool CanDisappearOnStun()
+	property bool CanDisappearOnStun
 	{
-		return NPCChaserCanDisappearOnStun(this.Index);
+		public get()
+		{
+			return NPCChaserCanDisappearOnStun(this.Index);
+		}
 	}
 
 	property bool AutoChaseEnabled

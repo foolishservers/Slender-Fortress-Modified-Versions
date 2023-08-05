@@ -109,7 +109,7 @@ static void SpecialRoundGetDescriptionHud(int specialRound, char[] buffer,int bu
 	}
 
 	g_SpecialRoundsConfig.Rewind();
-	char specialRoundString[32];
+	char specialRoundString[128];
 	FormatEx(specialRoundString, sizeof(specialRoundString), "%d", specialRound);
 
 	if (!g_SpecialRoundsConfig.JumpToKey(specialRoundString))
@@ -130,7 +130,7 @@ static void SpecialRoundGetDescriptionChat(int specialRound, char[] buffer,int b
 	}
 
 	g_SpecialRoundsConfig.Rewind();
-	char specialRoundString[64];
+	char specialRoundString[256];
 	FormatEx(specialRoundString, sizeof(specialRoundString), "%d", specialRound);
 
 	if (!g_SpecialRoundsConfig.JumpToKey(specialRoundString))
@@ -341,13 +341,13 @@ static void SpecialRoundCycleFinish()
 
 	if (!SF_SpecialRound(SPECIALROUND_SUPRISE))
 	{
-		char descHud[64];
+		char descHud[128];
 		SpecialRoundGetDescriptionHud(g_SpecialRoundType, descHud, sizeof(descHud));
 
 		char iconHud[64];
 		SpecialRoundGetIconHud(g_SpecialRoundType, iconHud, sizeof(iconHud));
 
-		char descChat[64];
+		char descChat[256];
 		SpecialRoundGetDescriptionChat(g_SpecialRoundType, descChat, sizeof(descChat));
 
 		SpecialRoundGameText(descHud, iconHud);
@@ -1353,13 +1353,13 @@ static Action Timer_SpecialRoundVoteLoop(Handle timer)
 
 Action Timer_DisplaySpecialRound(Handle timer)
 {
-	char descHud[64];
+	char descHud[128];
 	SpecialRoundGetDescriptionHud(g_SpecialRoundType, descHud, sizeof(descHud));
 
 	char iconHud[64];
 	SpecialRoundGetIconHud(g_SpecialRoundType, iconHud, sizeof(iconHud));
 
-	char descChat[64];
+	char descChat[256];
 	SpecialRoundGetDescriptionChat(g_SpecialRoundType, descChat, sizeof(descChat));
 
 	SpecialRoundGameText(descHud, iconHud);

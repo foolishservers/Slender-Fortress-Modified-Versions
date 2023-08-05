@@ -1351,6 +1351,54 @@ float GetChaserProfileAttackCancelDistance(const char[] profile, int attackIndex
 	return attackData.CancelDistance[difficulty];
 }
 
+bool GetChaserProfileAttackWithJump(const char[] profile, int attackIndex, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	if (g_CachedProfileData.Attacks.Length <= attackIndex)
+	{
+		return false;
+	}
+	SF2ChaserBossProfileAttackData attackData;
+	g_CachedProfileData.Attacks.GetArray(attackIndex, attackData, sizeof(attackData));
+	return attackData.AttackWithJump[difficulty];
+}
+
+float GetChaserProfileAttackJumpDuration(const char[] profile, int attackIndex, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	if (g_CachedProfileData.Attacks.Length <= attackIndex)
+	{
+		return 0.0;
+	}
+	SF2ChaserBossProfileAttackData attackData;
+	g_CachedProfileData.Attacks.GetArray(attackIndex, attackData, sizeof(attackData));
+	return attackData.JumpDuration[difficulty];
+}
+
+float GetChaserProfileAttackJumpSpeed(const char[] profile, int attackIndex, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	if (g_CachedProfileData.Attacks.Length <= attackIndex)
+	{
+		return 0.0;
+	}
+	SF2ChaserBossProfileAttackData attackData;
+	g_CachedProfileData.Attacks.GetArray(attackIndex, attackData, sizeof(attackData));
+	return attackData.JumpSpeed[difficulty];
+}
+
+float GetChaserProfileAttackJumpDelay(const char[] profile, int attackIndex, int difficulty)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	if (g_CachedProfileData.Attacks.Length <= attackIndex)
+	{
+		return 0.0;
+	}
+	SF2ChaserBossProfileAttackData attackData;
+	g_CachedProfileData.Attacks.GetArray(attackIndex, attackData, sizeof(attackData));
+	return attackData.JumpDelay[difficulty];
+}
+
 bool GetChaserProfileEnableAdvancedDamageEffects(const char[] profile)
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
@@ -1637,6 +1685,12 @@ int GetChaserProfileSentryRocketShootSound(const char[] profile, char[] buffer, 
 {
 	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
 	return strcopy(buffer, bufferlen, g_CachedProfileData.SentryRocketShootSound);
+}
+
+int GetChaserProfileGrenadeModel(const char[] profile, char[] buffer, int bufferlen)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return strcopy(buffer, bufferlen, g_CachedProfileData.GrenadeModel);
 }
 
 int GetChaserProfileGrenadeShootSound(const char[] profile, char[] buffer, int bufferlen)
@@ -2506,4 +2560,10 @@ bool GetProfileAttackVector(const char[] profile, const char[] keyValue, float b
 	g_Config.JumpToKey(key);
 	g_Config.GetVector(keyValue, buffer, defaultValue);
 	return true;
+}
+
+bool GetChaserProfileDontFollowPlayerWhileAlert(const char[] profile)
+{
+	g_ChaserBossProfileData.GetArray(profile, g_CachedProfileData, sizeof(g_CachedProfileData));
+	return g_CachedProfileData.DontFollowPlayerWhileAlert;
 }
