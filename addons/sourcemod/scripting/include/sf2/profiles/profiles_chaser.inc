@@ -173,6 +173,11 @@ enum struct SF2ChaserBossProfileAttackData
 	bool CancelLos[Difficulty_Max];
 	float CancelDistance[Difficulty_Max];
 
+	bool AttackWithJump[Difficulty_Max];
+	float JumpDuration[Difficulty_Max];
+	float JumpSpeed[Difficulty_Max];
+	float JumpDelay[Difficulty_Max];
+
 	void Init()
 	{
 		for (int difficulty = 0; difficulty < Difficulty_Max; difficulty++)
@@ -225,6 +230,11 @@ enum struct SF2ChaserBossProfileAttackData
 
 			this.CancelLos[difficulty] = false;
 			this.CancelDistance[difficulty] = -1.0;
+
+			this.AttackWithJump[difficulty] = false;
+			this.JumpDuration[difficulty] = 0.0;
+			this.JumpDelay[difficulty] = 0.0;
+			this.JumpSpeed[difficulty] = 0.0;
 		}
 		for (int i = 0; i < 3; i++)
 		{
@@ -424,6 +434,7 @@ enum struct SF2ChaserBossProfileData
 	char IceballTrail[PLATFORM_MAX_PATH];
 	char RocketExplodeSound[PLATFORM_MAX_PATH];
 	char RocketShootSound[PLATFORM_MAX_PATH];
+	char GrenadeModel[PLATFORM_MAX_PATH];
 	char GrenadeShootSound[PLATFORM_MAX_PATH];
 	char SentryRocketShootSound[PLATFORM_MAX_PATH];
 	char ArrowShootSound[PLATFORM_MAX_PATH];
@@ -594,6 +605,8 @@ enum struct SF2ChaserBossProfileData
 
 	float AfterburnMultiplier;
 	float BackstabDamageScale;
+
+	bool DontFollowPlayerWhileAlert;
 
 	// Sounds
 	SF2BossProfileSoundInfo IdleSounds;
@@ -807,6 +820,7 @@ enum struct SF2ChaserBossProfileData
 		this.IceballTrail = ICEBALL_TRAIL;
 		this.RocketExplodeSound = ROCKET_IMPACT;
 		this.RocketShootSound = ROCKET_SHOOT;
+		this.GrenadeModel = GRENADE_MODEL;
 		this.GrenadeShootSound = GRENADE_SHOOT;
 		this.SentryRocketShootSound = SENTRYROCKET_SHOOT;
 		this.ArrowShootSound = ARROW_SHOOT;
@@ -990,6 +1004,8 @@ enum struct SF2ChaserBossProfileData
 		this.AlertMusics.Channel = MUSIC_CHAN;
 		this.IdleMusics.Init();
 		this.IdleMusics.Channel = MUSIC_CHAN;
+
+		this.DontFollowPlayerWhileAlert = false;
 	}
 
 	void PostLoad()

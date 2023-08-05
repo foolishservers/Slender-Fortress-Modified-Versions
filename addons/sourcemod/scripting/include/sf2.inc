@@ -741,9 +741,9 @@ native int SF2_GetSpecialRoundType();
 /**
  * Returns if a certain special round is running
  *
- * @return				Special round type.
+ * @return				True if certain special round is running, false if not.
  */
-native int SF2_IsInSpecialRound(int specialRound);
+native bool SF2_IsInSpecialRound(int specialRound);
 
 /**
  * Returns the current group a player is in.
@@ -1333,6 +1333,16 @@ native bool SF2_IsBossStunnable(int bossIndex);
  * @return					True if stunnable by flashlight, false otherwise.
  */
 native bool SF2_IsBossStunnableByFlashlight(int bossIndex);
+
+/**
+ * Returns whether or not the boss can disappear when stunned.
+ *
+ * Only used with Chaser bosses.
+ *
+ * @param bossIndex		Boss index.
+ * @return					True if disappear when stunned, false otherwise.
+ */
+native bool SF2_CanBossDisappearOnStun(int bossIndex);
 
 /**
  * Returns whether or not the boss is cloaked.
